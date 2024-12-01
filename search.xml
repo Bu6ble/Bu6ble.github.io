@@ -144,6 +144,21 @@
   </entry>
   <entry>
     <title></title>
+    <url>/uncategorized/git%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<p>git命令</p>
+<ul>
+<li><p>【git rev-parse】命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">git rev-parse path/to/file    // 转换相对路径为仓库内的</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/uncategorized/hello-world%20-%20%E5%89%AF%E6%9C%AC%20(2)/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title></title>
     <url>/uncategorized/Windows%20%E5%AE%89%E8%A3%85%E6%BF%80%E6%B4%BB%E6%9C%80%E6%96%B0%E7%89%88%E7%9A%84%20Typora%201.9.5/</url>
     <content><![CDATA[<h1 id="Windows-安装激活最新版的-Typora-1-9-5【实测有效】"><a href="#Windows-安装激活最新版的-Typora-1-9-5【实测有效】" class="headerlink" title="Windows 安装激活最新版的 Typora 1.9.5【实测有效】"></a>Windows 安装激活最新版的 Typora 1.9.5【实测有效】</h1><ol>
 <li><p>存个官网链接</p>
@@ -176,16 +191,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/uncategorized/git%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<p>git命令</p>
-<ul>
-<li><p>【git rev-parse】命令</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">git rev-parse path/to/file    // 转换相对路径为仓库内的</span><br></pre></td></tr></table></figure></div></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
     <title>Hello World</title>
     <url>/uncategorized/hello-world%20-%20%E5%89%AF%E6%9C%AC/</url>
     <content><![CDATA[<p>Welcome to <a class="link"   href="https://hexo.io/" >Hexo <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>! This is your very first post. Check <a class="link"   href="https://hexo.io/docs/" >documentation <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> for more info. If you get any problems when using Hexo, you can find the answer in <a class="link"   href="https://hexo.io/docs/troubleshooting.html" >troubleshooting <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> or you can ask me on <a class="link"   href="https://github.com/hexojs/hexo/issues" >GitHub <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.</p>
@@ -202,11 +207,6 @@
 
 <p>More info: <a class="link"   href="https://hexo.io/docs/one-command-deployment.html" >Deployment <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/uncategorized/hello-world%20-%20%E5%89%AF%E6%9C%AC%20(2)/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Hello World</title>
