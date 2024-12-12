@@ -13,7 +13,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://bu6ble.github.io/tags/"/>
+    <link rel="canonical" href="https://bu6ble.github.io/深度学习/吴恩达《神经网络与深度学习》/神经网络基础/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -21,15 +21,33 @@
     
     
         
-        <meta property="og:type" content="website">
-<meta property="og:title" content="Tags">
-<meta property="og:url" content="https://bu6ble.github.io/tags/">
+        <meta name="description" content="二元分类 逻辑回归是一个用于二分类(binary classification)的算法。 举个例子，假如你有一张图片作为输入，比如一只猫，如果识别这张图片为猫，则输出标签1作为结果；如果识别出不是猫，那么输出标签0作为结果。 一张图片在计算机中是如何表示的，为了保存一张图片，需要保存三个矩阵，它们分别对应图片中的红、绿、蓝三种颜色通道，如果你的图片大小为64x64像素，那么你就有三个规模为64x6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络基础">
+<meta property="og:url" content="https://bu6ble.github.io/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E5%90%B4%E6%81%A9%E8%BE%BE%E3%80%8A%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E3%80%8B/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/">
 <meta property="og:site_name" content="Bubb1e">
+<meta property="og:description" content="二元分类 逻辑回归是一个用于二分类(binary classification)的算法。 举个例子，假如你有一张图片作为输入，比如一只猫，如果识别这张图片为猫，则输出标签1作为结果；如果识别出不是猫，那么输出标签0作为结果。 一张图片在计算机中是如何表示的，为了保存一张图片，需要保存三个矩阵，它们分别对应图片中的红、绿、蓝三种颜色通道，如果你的图片大小为64x64像素，那么你就有三个规模为64x6">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-12-05T13:10:30.000Z">
-<meta property="article:modified_time" content="2024-12-05T13:10:55.654Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/image-20241210211233889.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/1733838516807.png">
+<meta property="og:image" content="c:\Users\Bubb1e\AppData\Roaming\Typora\typora-user-images\image-20241210215417716.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/image-20241210220150785.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/0102a11a2b72c38eabc4882d11a2c8b9.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/ce5234c8312fe79de93e44b31b75e859.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/7d7e8d051e62e36a9ae62b8302145c9d.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/image-20241212163325610.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/47f5a006bee9579d26947c9bd0f66478.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/cb9bd747634f0168bd22b9270d29f1a8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/1fb24081b3bc79e0913502427b5fa4be.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/a05187bbd232fc8565856b0998186e51.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/ed6cdc26dfe1a0ef78d0ad696ebd7c32.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/792ecdcf33787b3e3c9fc8d1d7b9d1a9.png">
+<meta property="article:published_time" content="2024-12-09T12:20:20.000Z">
+<meta property="article:modified_time" content="2024-12-12T08:52:02.155Z">
 <meta property="article:author" content="Bubb1e">
+<meta property="article:tag" content="deep learning">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/image-20241210211233889.png">
     
     
     <!--- Icon Part-->
@@ -41,7 +59,7 @@
     
     <title>
         
-            Tags | Bubb1e&#39;s BLOG
+            神经网络基础 | Bubb1e&#39;s BLOG
         
     </title>
 
@@ -547,53 +565,410 @@
 			
 
 			<div class="main-content">
-				<div class="page-template-container">
-	
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
 
-	
-	
-	<h1 class="page-title-header">
-		Tags
-	</h1>
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">神经网络基础</h1>
+			</div>
+			
+		</div>
 
-	
-	<div class="tagcloud-content">
-		<ul class="tag-list" data-show-value="true">
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/bubble.png">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Bubb1e</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-12-09 20:20:20</span>
+        <span class="mobile">2024-12-09 20:20:20</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-12-12 16:52:02</span>
+            <span class="mobile">2024-12-12 16:52:02</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E5%90%B4%E6%81%A9%E8%BE%BE%E3%80%8A%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E3%80%8B/">吴恩达《神经网络与深度学习》</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/deep-learning/">deep learning</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.7k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>10 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="二元分类"><a href="#二元分类" class="headerlink" title="二元分类"></a>二元分类</h2><ul>
+<li>逻辑回归是一个用于二分类(<strong>binary classification</strong>)的算法。</li>
+<li>举个例子，假如你有一张图片作为输入，比如一只猫，如果识别这张图片为猫，则输出标签1作为结果；如果识别出不是猫，那么输出标签0作为结果。</li>
+<li>一张图片在计算机中是如何表示的，为了保存一张图片，需要保存三个矩阵，它们分别对应图片中的红、绿、蓝三种颜色通道，如果你的图片大小为64x64像素，那么你就有三个规模为64x64的矩阵，分别对应图片中红、绿、蓝三种像素的强度值。</li>
+<li>为了便于表示，这里画了三个很小的矩阵，注意它们的规模为5x4 而不是64x64。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/image-20241210211233889.png"
+                      alt="image-20241210211233889"
+                ></p>
+<ul>
+<li>为了把这些像素值放到一个特征向量中，我们需要把这些像素值提取出来，然后放入一个特征向量 x 。<ul>
+<li>为了把这些像素值转换为特征向量 x ，需要像上述这样定义一个特征向量x来表示这张图片，把所有的像素都取出来，例如255、231等等，直到取完所有的红色像素，接着最后是255、134、…、255、134等等，直到得到一个特征向量，把图片中所有的红、绿、蓝像素值都列出来。</li>
+<li>如果图片的大小为64x64像素，那么向量x的总维度，将是64乘以64乘以3，这是三个像素矩阵中像素的总量。在这个例子中结果为$n_x$ &#x3D; 12288</li>
+</ul>
+</li>
+<li>因此，在二分类问题中，我们的目标就是学习到分类器，它以图片的特征向量作为输入，然后预测输出 y，结果为1还是0，也就是预测图片中是否有猫。</li>
+<li>下图引入一些符号定义：<ul>
+<li>用一对 ( x , y ) 来表示一个单独的样本。</li>
+<li>训练样本个数：M<del>train</del></li>
+<li>测试样本个数：M<del>test</del></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/1733838516807.png"
+                      alt="1733838516807"
+                ></p>
+<ul>
+<li>为了能把训练集表示得更紧凑一点，我们会定义一个矩阵用大写的X表示。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="C:\Users\Bubb1e\AppData\Roaming\Typora\typora-user-images\image-20241210215417716.png"
+                      alt="image-20241210215417716"
+                ></p>
+<ul>
+<li>X是一个规模为$n_x$乘以m的矩阵，当使用X.shape的Python命令时，可显示矩阵的规模，即X.shape等于（$n_x$，m）。</li>
+<li>而对于y的定义，则是一个规模为1乘以m的矩阵，同时也可以使用y.shape的Python命令计算可得。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/image-20241210220150785.png"
+                      alt="image-20241210220150785"
+                ></p>
+<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><ul>
+<li><p>对于二元分类问题来讲，给定一个输入特征向量$X$，它可能对应一张图片，你想识别这张图片识别看它是否是一只猫或者不是一只猫的图片，你想要一个算法能够输出预测，你只能称之为 $\hat{y}$ ，也就是你对实际值 $y$ 的估计。</p>
+</li>
+<li><p>更正式地来说，你想让 $\hat{y}$ 表示 $y$ 等于 1 的一种可能性，前提条件是给定了输入特征 $X$。</p>
+</li>
+<li><p>$X$ 是一个 $n_x$ 维的向量（相当于有$n_x$个特征的特征向量）， 用 $w$ 表示逻辑回归的参数，也是一个 $n_x$ 维的向量（因为 $w$ 是特征权重，维度与特征向量相同），参数里面还有 $b$，这是一个实数（表示偏差）。所以给出输入 $X$  以及参数 $w$ 和 $b$  之后，我们怎样产生输出预测值  $\hat{y}$ ，一件你可以尝试却不可行的事是让  $\hat{y}$ &#x3D; $w^T x + b$。</p>
+</li>
+<li><p>这时候我们得到的是一个关于输入$X$的线性函数，实际上这是你在做线性回归时所用到的，但是这对于二元分类问题来讲不是一个非常好的算法。因为你想要 $\hat{y}$ 表示实际值 $y$ 等于1的几率的话， $\hat{y}$ 应该在0到1之间。但是$w^T x + b$是一个可能比1大得多，甚至是一个负值。</p>
+</li>
+<li><p>对于你想要的在0和1之间的概率来说它是没有意义的，因此在逻辑回归中，我们的输出 $\hat{y}$，应该是等于由上面得到的线性函数式子作为自变量的sigmoid函数中，公式下所示：**$\hat{y}$ &#x3D; $\sigma (w^T x + b)$**。 ，将线性函数转换为非线性函数。</p>
+</li>
+<li><p>下图是sigmoid函数的图像，如果我把水平轴作为 $z$ 轴，那么关于 $z$ 的sigmoid函数是平滑地从0到1。通常用 $z$ 来表示 $w^T x + b$ 的值。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/0102a11a2b72c38eabc4882d11a2c8b9.png"
+                      alt="img"
+                ></p>
+</li>
+<li><p>关于sigmoid函数的公式是这样的：$\sigma(z)&#x3D;\frac{1}{1 + e^{-z}}$</p>
+<ul>
+<li>在这里 $z$ 是一个实数</li>
+<li>如果 $z$ 非常大，那么 $e^{-z}$ 将会接近于0，关于 $z$ 的sigmoid函数将会近似等于1除以1加上某个非常接近于0的项，因为 $e$ 的指数如果是个绝对值很大的负数的话，这项将会接近于0，所以如果z很大的话，那么关于z 的sigmoid函数会非常接近1。</li>
+<li>如果 $z$ 非常小或者说是一个绝对值很大的负数，那么关于 $e^{-z}$ 这项会变成一个很大的数，即1除以一个非常非常大的数，所以这个就接近于0。</li>
+<li>因此当你实现逻辑回归时，你的工作就是去让机器学习参数  $w$  以及 $b$ 这样才使得 $\hat{y}$ 成为 $y &#x3D;1$ 这一情况的概率的一个很好的估计。</li>
+</ul>
+</li>
+</ul>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><ul>
+<li><strong>为什么需要代价函数：</strong>为了训练逻辑回归模型的参数 $w$ 和参数 $b$，我们需要一个代价函数，通过训练代价函数来得到参数 $w$ 和参数 $b$。</li>
+<li>看一下逻辑回归的输出函数：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/ce5234c8312fe79de93e44b31b75e859.png"
+                      alt="img"
+                ></p>
+<ul>
+<li><p>为了让模型通过学习调整参数，你需要给予一个 $m$ 本的训练集，这会让你在训练集上找到参数 $w$ 和参数 $b$，来得到你的输出。</p>
+</li>
+<li><p>对训练集的预测值，我们将它写成 $\hat{y}$，我们更希望它会接近于训练集中的 $y$ 值。</p>
+</li>
+<li><p>使用这些带有圆括号的上标来区分索引和样本，训练样本 $i$ 所对应的预测值为 ${y}^{(i)}$，是用训练样本 $ \mathbf{w}^T \mathbf{x}^{(i)} + b $ 通过sigmoid函数来得到，也可以将 $z$ 定义为 $ {z}^{(i)} &#x3D; \mathbf{w}^T \mathbf{x}^{(i)} + b $ 。因此，可以明确，上标 $(i)$ 是用来指明数据表示 $x$ 或者 $y$ 或者 $z$ 获取其他数据的第 $i$ 个训练样本。</p>
+</li>
+<li><p>损失函数又叫做误差函数，用来衡量算法的运行情况，即 **Loss function：$L(\hat{y},y)$**。</p>
+</li>
+<li><p>一般通过这个称为 $L$ 的损失函数，来衡量预测输出值和实际值有多接近。一般我们用预测值和实际值的平方差或者它们平方差的一半，但是通常在逻辑回归中不这么做。</p>
+<ul>
+<li>因为在逻辑回归参数中，会发现优化目标不是凸优化，只能找到多个局部最优值，梯度下降法很可能找不到全局最优值，虽然平方差是一个不错的损失函数，但是在逻辑回归模型中会定义另外一个损失函数。</li>
+</ul>
+</li>
+<li><p>我们在逻辑回归中用到的损失函数是：<br>$$<br>L(\hat{y}, y) &#x3D; -y \log(\hat{y}) - (1 - y) \log(1 - \hat{y})<br>$$</p>
+</li>
+<li><p>为什么要用这个函数作为逻辑损失函数？当我们使用平方误差作为损失函数的时候，你会想要让这个误差尽可能地小，对于这个逻辑回归损失函数，我们也想让它尽可能地小，为了更好地理解这个损失函数怎么起作用，我们举两个例子。</p>
+<ul>
+<li>当 $y &#x3D;1$时损失函数 $y &#x3D; - \log(\hat{y})$，如果想要损失函数 $L$  尽可能得小，那么 $\hat{y}$ 就要尽可能大，因为sigmoid函数取值 [0,1]，所以， $\hat{y}$ 会无限接近于1。</li>
+<li>当 $y &#x3D;0$ 时损失函数 $y &#x3D; - \log(1 - \hat{y})$ ，如果想要损失函数 $L$  尽可能得小，那么 $\hat{y}$ 就要尽可能小，因为sigmoid函数取值 [0,1]，所以 $\hat{y}$ 会无限接近于0。</li>
+</ul>
+</li>
+<li><p>因此，我们可以看见，如果 $y&#x3D;1$，则会尽可能让 $\hat{y}$ 变大，如果 $y&#x3D;0$，则会尽可能让 $\hat{y}$ 变小。</p>
+</li>
+<li><p>损失函数是在单个训练样本中定义的，它衡量的是算法在单个训练样本中表现如何，为了衡量算法在全部训练样本上的表现如何，需要定义一个算法的代价函数，是对 $m$ 个样本的代价函数求和然后除以 $m$。</p>
+</li>
+</ul>
+<p>$$<br>J(w, b) &#x3D; \frac{1}{m} \sum_{i &#x3D; 1}^{m} L(\hat{y}^{(i)}, y^{(i)}) &#x3D; \frac{1}{m} \sum_{i &#x3D; 1}^{m} (-y^{(i)} \log \hat{y}^{(i)} - (1 - y^{(i)}) \log (1 - \hat{y}^{(i)}))<br>$$</p>
+<h2 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a>梯度下降法</h2><ul>
+<li>梯度下降法可以做什么？<ul>
+<li>在测试集上，通过最小化代价函数（成本函数） $J(w, b) $ 来训练参数 $w$ 和 $b$</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/7d7e8d051e62e36a9ae62b8302145c9d.png"
+                      alt="img"
+                ></p>
+<ul>
+<li><p><strong>梯度下降法的形象化说明</strong></p>
+<ul>
+<li>定义 $w$ 和 $b$ ，都是单一实数，代价函数（成本函数）$J(w, b) $ 是水平轴上 $w$ 和 $b$ 上的曲面，因此曲面的高度就是$J(w, b) $ 在某一点的函数值。</li>
+<li>我们所做的就是找到使得代价函数（成本函数）$J(w, b) $ 函数值是最小值，对应的参数 $w$ 和 $b$ 。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/image-20241212163325610.png"
+                      alt="image-20241212163325610"
+                ></p>
+<ul>
+<li>如图所示，代价函数（成本函数）$J(w, b) $ 是一个凸函数，像一个大碗一样。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/47f5a006bee9579d26947c9bd0f66478.png"
+                      alt="img"
+                ></p>
+<ul>
+<li>如图，这就与刚才的图有些相反，因为它是非凸的并且有很多不同的局部最小值。由于逻辑回归的代价函数（成本函数）$J(w, b) $ 特性，我们必须定义代价函数（成本函数）$J(w, b) $ 为凸函数。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/cb9bd747634f0168bd22b9270d29f1a8.png"
+                      alt="img"
+                ></p>
+<ul>
+<li>初始化 $w$ 和 $b$  ，可以用如图那个小红点来初始化参数，也可以采用随机初始化的方法，对于逻辑回归几乎所有的初始化方法都有效，因为函数是凸函数，无论在哪里初始化，应该达到同一点或大致相同的点。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/1fb24081b3bc79e0913502427b5fa4be.png"
+                      alt="img"
+                ></p>
+<ul>
+<li>我们以如图的小红点的坐标来初始化参数 $w$ 和 $b$ 。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/a05187bbd232fc8565856b0998186e51.png"
+                      alt="img"
+                ></p>
+<ul>
+<li>朝最陡的下坡方向走一步，不断地迭代。我们朝最陡的下坡方向走一步，如图，走到了如图中第二个小红点处。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/ed6cdc26dfe1a0ef78d0ad696ebd7c32.png"
+                      alt="img"
+                ></p>
+<ul>
+<li>我们可能停在这里也有可能继续朝最陡的下坡方向再走一步，如图，经过两次迭代走到第三个小红点处。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/792ecdcf33787b3e3c9fc8d1d7b9d1a9.png"
+                      alt="img"
+                ></p>
+<ul>
+<li><strong>直到走到全局最优解或者接近全局最优解的地方</strong>。通过以上的三个步骤我们可以找到全局最优解，也就是代价函数（成本函数）$J(w, b) $ 这个凸函数的最小值点。</li>
+</ul>
+</li>
+</ul>
+<p>​	</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>标题:</strong> 神经网络基础</li>
+        <li><strong>作者:</strong> Bubb1e</li>
+        <li><strong>创建于
+                :</strong> 2024-12-09 20:20:20</li>
+        
+            <li>
+                <strong>更新于
+                    :</strong> 2024-12-12 16:52:02
+            </li>
+        
+        <li>
+            <strong>链接:</strong> https://github.com/Bu6ble/Bu6ble.github.io.git/深度学习/吴恩达《神经网络与深度学习》/神经网络基础/
+        </li>
+        <li>
+            <strong>
+                版权声明:
+            </strong>
+            
+
+            
+                本文章采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a> 进行许可。
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
 			
-				<li>
-					<a data-weight="2" href="/tags/environment/">
-						<i class="fa-solid fa-hashtag"></i>environment
-					</a>
-				</li>
-			
-				<li>
-					<a data-weight="2" href="/tags/deep-learning/">
-						<i class="fa-solid fa-hashtag"></i>deep learning
-					</a>
-				</li>
+			<li class="tag-item mx-0.5">
+				<a href="/tags/deep-learning/">#deep learning</a>&nbsp;
+			</li>
 			
 		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/%E7%BB%84%E4%BB%B6%E5%BA%93/Typora%E6%B7%BB%E5%8A%A0%E8%A1%8C%E5%86%85%E5%85%AC%E5%BC%8F%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">Typora添加行内公式语法格式</span>
+						<span class="post-nav-item">上一篇</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E5%90%B4%E6%81%A9%E8%BE%BE%E3%80%8A%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E3%80%8B/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%AE%BA/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">深度学习概论</span>
+						<span class="post-nav-item">下一篇</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
 	</div>
-	
-
 
 	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">目录</div>
+		<div class="page-title">神经网络基础</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%85%83%E5%88%86%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">二元分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92"><span class="nav-number">2.</span> <span class="nav-text">逻辑回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">梯度下降法</span></a></li></ol>
 
-	<div class="page-template-content markdown-body">
-		
-
-		
-	</div>
-
-	<div class="page-template-comments">
-		
 	</div>
 </div>
-
-<div class="paginator">
+	</div>
 	
 </div>
-  
 			</div>
 
 			
@@ -675,6 +1050,22 @@
 		</div>
 	</div>
 
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
 	
 
 	<div class="right-side-tools-container">
@@ -778,6 +1169,7 @@
         containers: ["#swup"],
     });
 </script>
+
 
 
 
