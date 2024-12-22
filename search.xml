@@ -1,90 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>HEXO使用指南</title>
-    <url>/HEXO/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/HEXO%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p>Hexo 是一个快速、简洁且高效的博客框架。 </p>
-<p>Hexo 使用Markdown（或其他标记语言）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
-<p>欢迎使用 Hexo，本文档将帮助您快速上手：<a class="link"   href="https://hexo.io/zh-cn/docs/index.html" >https://hexo.io/zh-cn/docs/index.html<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
-<p> 仅以此文记录一些在使用期间需要用到的内容。</p>
-<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link"   href="https://hexo.io/docs/writing.html" >Writing<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link"   href="https://hexo.io/docs/server.html" >Server<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link"   href="https://hexo.io/docs/generating.html" >Generating<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link"   href="https://hexo.io/docs/one-command-deployment.html" >Deployment<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
-<h2 id="初始创建用法"><a href="#初始创建用法" class="headerlink" title="初始创建用法"></a>初始创建用法</h2><h3 id="创建分类"><a href="#创建分类" class="headerlink" title="创建分类"></a>创建分类</h3><ul>
-<li>打开命令行，进入博客所在文件夹的<strong>根目录</strong>，执行下述命令。</li>
-</ul>
-<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new page categories</span><br></pre></td></tr></table></figure></div>
-
-<ul>
-<li>在<code>source/categories</code>下找到<code>index.md</code>文件，可得到内容如下。</li>
-</ul>
-<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">categories</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-03 22:53:43</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
-
-<ul>
-<li>修改内容如下。</li>
-</ul>
-<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">分类（可自定义）</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-03 22:53:43</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">categories</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
-
-<ul>
-<li>打开需要分类的文章，在文章开头添加<code>Front Matter</code>格式。<ul>
-<li>这里要注意，一篇文章只能属于一个分类</li>
-<li>如果需要分类嵌套，则继续添加“-xxx”。如下所示，为该文章属于“HEXO”下的“使用教程”分类</li>
-</ul>
-</li>
-</ul>
-<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">HEXO使用指南</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-05 21:54:35</span></span><br><span class="line"><span class="attr">categories:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">HEXO</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">使用教程</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
-
-<ul>
-<li>根据上述操作则给文章添加分类，点击首页的“分类”可以看到该分类下的所有文章。</li>
-<li>只有添加了<code>categories: xxx</code>的文章才会被收录到首页的“分类”中。</li>
-</ul>
-<h3 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h3><ul>
-<li>打开命令行，进入博客所在文件夹的<strong>根目录</strong>，执行下述命令。</li>
-</ul>
-<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new page tags</span><br></pre></td></tr></table></figure></div>
-
-<ul>
-<li>在<code>source/categories</code>下找到<code>index.md</code>文件，可得到内容如下。</li>
-</ul>
-<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">tags</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-03 22:53:43</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
-
-<ul>
-<li>修改内容如下。</li>
-</ul>
-<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">标签（可自定义）</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-03 22:53:43</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">categories</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
-
-<ul>
-<li>打开需要加标签的文章，在文章开头添加<code>Front Matter</code>格式。<ul>
-<li>这里要注意，一篇文章只能属于一个分类</li>
-<li>如果需要分类嵌套，则继续添加“-xxx”。如下所示，为该文章属于“HEXO”下的“使用教程”分类</li>
-</ul>
-</li>
-</ul>
-<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">HEXO使用指南</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-05 21:54:35</span></span><br><span class="line"><span class="attr">categories:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">HEXO</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">使用教程</span></span><br><span class="line"><span class="attr">tags:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">environment</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
-
-<ul>
-<li>根据上述操作则给文章添加标签，点击首页的“标签”可以看到该标签下的所有文章。</li>
-<li>只有添加了<code>tags: xxx</code>的文章才会被收录到首页的“标签”中。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>HEXO</category>
-        <category>使用教程</category>
-      </categories>
-      <tags>
-        <tag>environment</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>安装教程</title>
     <url>/HEXO/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/HEXO%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</url>
     <content><![CDATA[<p>HEXO+NODEJS</p>
@@ -224,6 +140,90 @@
 <li>使用github pages和hexo搭建个人博客并绑定域名[<a class="link"   href="https://blog.csdn.net/weixin_44826970/article/details/120044020]" >https://blog.csdn.net/weixin_44826970/article/details/120044020]<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
 <li>Git提示“warning: LF will be replaced by CRLF”最详细解释+解决方案[<a class="link"   href="https://zhuanlan.zhihu.com/p/586324681]" >https://zhuanlan.zhihu.com/p/586324681]<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
 </ol>
+]]></content>
+      <categories>
+        <category>HEXO</category>
+        <category>使用教程</category>
+      </categories>
+      <tags>
+        <tag>environment</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HEXO使用指南</title>
+    <url>/HEXO/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/HEXO%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p>Hexo 是一个快速、简洁且高效的博客框架。 </p>
+<p>Hexo 使用Markdown（或其他标记语言）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
+<p>欢迎使用 Hexo，本文档将帮助您快速上手：<a class="link"   href="https://hexo.io/zh-cn/docs/index.html" >https://hexo.io/zh-cn/docs/index.html<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p> 仅以此文记录一些在使用期间需要用到的内容。</p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link"   href="https://hexo.io/docs/writing.html" >Writing<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link"   href="https://hexo.io/docs/server.html" >Server<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link"   href="https://hexo.io/docs/generating.html" >Generating<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link"   href="https://hexo.io/docs/one-command-deployment.html" >Deployment<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h2 id="初始创建用法"><a href="#初始创建用法" class="headerlink" title="初始创建用法"></a>初始创建用法</h2><h3 id="创建分类"><a href="#创建分类" class="headerlink" title="创建分类"></a>创建分类</h3><ul>
+<li>打开命令行，进入博客所在文件夹的<strong>根目录</strong>，执行下述命令。</li>
+</ul>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new page categories</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在<code>source/categories</code>下找到<code>index.md</code>文件，可得到内容如下。</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">categories</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-03 22:53:43</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>修改内容如下。</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">分类（可自定义）</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-03 22:53:43</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">categories</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>打开需要分类的文章，在文章开头添加<code>Front Matter</code>格式。<ul>
+<li>这里要注意，一篇文章只能属于一个分类</li>
+<li>如果需要分类嵌套，则继续添加“-xxx”。如下所示，为该文章属于“HEXO”下的“使用教程”分类</li>
+</ul>
+</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">HEXO使用指南</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-05 21:54:35</span></span><br><span class="line"><span class="attr">categories:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">HEXO</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">使用教程</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>根据上述操作则给文章添加分类，点击首页的“分类”可以看到该分类下的所有文章。</li>
+<li>只有添加了<code>categories: xxx</code>的文章才会被收录到首页的“分类”中。</li>
+</ul>
+<h3 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h3><ul>
+<li>打开命令行，进入博客所在文件夹的<strong>根目录</strong>，执行下述命令。</li>
+</ul>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new page tags</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在<code>source/categories</code>下找到<code>index.md</code>文件，可得到内容如下。</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">tags</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-03 22:53:43</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>修改内容如下。</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">标签（可自定义）</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-03 22:53:43</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">categories</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>打开需要加标签的文章，在文章开头添加<code>Front Matter</code>格式。<ul>
+<li>这里要注意，一篇文章只能属于一个分类</li>
+<li>如果需要分类嵌套，则继续添加“-xxx”。如下所示，为该文章属于“HEXO”下的“使用教程”分类</li>
+</ul>
+</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">HEXO使用指南</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-12-05 21:54:35</span></span><br><span class="line"><span class="attr">categories:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">HEXO</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">使用教程</span></span><br><span class="line"><span class="attr">tags:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">environment</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>根据上述操作则给文章添加标签，点击首页的“标签”可以看到该标签下的所有文章。</li>
+<li>只有添加了<code>tags: xxx</code>的文章才会被收录到首页的“标签”中。</li>
+</ul>
 ]]></content>
       <categories>
         <category>HEXO</category>
@@ -612,6 +612,24 @@
       </categories>
   </entry>
   <entry>
+    <title>Hello World</title>
+    <url>/uncategorized/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a class="link"   href="https://hexo.io/" >Hexo<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>! This is your very first post. Check <a class="link"   href="https://hexo.io/docs/" >documentation<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> for more info. If you get any problems when using Hexo, you can find the answer in <a class="link"   href="https://hexo.io/docs/troubleshooting.html" >troubleshooting<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> or you can ask me on <a class="link"   href="https://github.com/hexojs/hexo/issues" >GitHub<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link"   href="https://hexo.io/docs/writing.html" >Writing<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link"   href="https://hexo.io/docs/server.html" >Server<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link"   href="https://hexo.io/docs/generating.html" >Generating<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link"   href="https://hexo.io/docs/one-command-deployment.html" >Deployment<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>二分查找法</title>
     <url>/%E7%AE%97%E6%B3%95/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E6%B3%95/</url>
     <content><![CDATA[<p>本题选自LeetCode的704题：<a class="link" href="https://leetcode.cn/problems/binary-search/solutions/1692151/by-jyd-i7xr/">https://leetcode.cn/problems/binary-search/solutions/1692151/by-jyd-i7xr/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
@@ -664,7 +682,7 @@
 <li>if (nums[middle] &gt; target) right 更新为 middle，因为当前nums[middle]不等于target，去左区间继续寻找，而寻找区间是左闭右开区间，所以right更新为middle，即：下一个查询区间不会去比较nums[middle]</li>
 </ul>
 <p>在数组：1,2,3,4,7,9,10中查找元素2，如图所示：（<strong>注意和方法一的区别</strong>）</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="C:\Users\Bubb1e\AppData\Roaming\Typora\typora-user-images\image-20241222194508644.png" alt="image-20241222194508644"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://cdn.jsdelivr.net/gh/Bu6ble/Pictures@main/img/image-20241222194508644.png" alt="image-20241222194508644"></p>
 <p>代码如下：（详细注释）</p>
 <div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="code"><pre><span class="line">// 版本二</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], target: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        left, right = <span class="number">0</span>, <span class="built_in">len</span>(nums)  <span class="comment"># 定义target在左闭右开的区间里，即：[left, right)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> left &lt; right:  <span class="comment"># 因为left == right时，在[left, right)是无效的空间，所以使用 &lt;</span></span><br><span class="line">            middle = left + (right - left) // <span class="number">2</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> nums[middle] &gt; target:</span><br><span class="line">                right = middle  <span class="comment"># target 在左区间，在[left, middle)中</span></span><br><span class="line">            <span class="keyword">elif</span> nums[middle] &lt; target:</span><br><span class="line">                left = middle + <span class="number">1</span>  <span class="comment"># target 在右区间，在[middle + 1, right)中</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> middle  <span class="comment"># 数组中找到目标值，直接返回下标</span></span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>  <span class="comment"># 未找到目标值</span></span><br></pre></td></tr></table></figure></div>
 
@@ -691,24 +709,6 @@
       <tags>
         <tag>算法</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/uncategorized/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a class="link"   href="https://hexo.io/" >Hexo<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>! This is your very first post. Check <a class="link"   href="https://hexo.io/docs/" >documentation<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> for more info. If you get any problems when using Hexo, you can find the answer in <a class="link"   href="https://hexo.io/docs/troubleshooting.html" >troubleshooting<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> or you can ask me on <a class="link"   href="https://github.com/hexojs/hexo/issues" >GitHub<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link"   href="https://hexo.io/docs/writing.html" >Writing<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link"   href="https://hexo.io/docs/server.html" >Server<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link"   href="https://hexo.io/docs/generating.html" >Generating<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link"   href="https://hexo.io/docs/one-command-deployment.html" >Deployment<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
-]]></content>
   </entry>
   <entry>
     <title>深度学习概论</title>
