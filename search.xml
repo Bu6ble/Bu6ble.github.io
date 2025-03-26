@@ -630,8 +630,8 @@
       </categories>
   </entry>
   <entry>
-    <title></title>
-    <url>/uncategorized/%E5%B8%B8%E8%A7%81%E7%9A%84%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA/</url>
+    <title>常见的输入和输出【Python篇】</title>
+    <url>/%E7%AE%97%E6%B3%95/%E5%B8%B8%E8%A7%81%E7%9A%84%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA/</url>
     <content><![CDATA[<h1 id="常见的输入和输出"><a href="#常见的输入和输出" class="headerlink" title="常见的输入和输出"></a>常见的输入和输出</h1><ul>
 <li>输入：输入包含<strong>一系列的a和b对</strong>，通过空格隔开。<strong>一对a和b占一行</strong>。</li>
 <li>输出：对于输入的每对a和b，你需要依次输出a、b的和。<ul>
@@ -684,6 +684,12 @@
 <div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        n = <span class="built_in">int</span>(<span class="built_in">input</span>())</span><br><span class="line">        nums = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            nums = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">int</span>, <span class="built_in">input</span>().split()))</span><br><span class="line">            <span class="built_in">print</span>(<span class="built_in">sum</span>(nums[<span class="number">1</span>:]))</span><br><span class="line">            <span class="keyword">if</span> i != n-<span class="number">1</span>:</span><br><span class="line">                <span class="built_in">print</span>()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure></div>
 
 ]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
   </entry>
   <entry>
     <title>二分查找法</title>
