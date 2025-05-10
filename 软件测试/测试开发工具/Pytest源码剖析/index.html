@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Bubb1e">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://bu6ble.github.io/软件测试/测试开发工具/pytest源码剖析/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="理论开篇 关于接口测试  实际上，接口测试的本质仍然是功能测试。它只是将测试的对象从用户界面转移到了应用程序接口(API)上。换句话说，我们不再需要通过UI与系统交互，而是直接通过接口发送请求、接收响应，并验证响应结果是否符合预期。   接口文档的要素  接口名称 接口地址 请求方法（GET, POST, PUT, DELETE等） 请求头信息 请求参数（必选参数与可选参数） 返回值及其数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pytest项目">
+<meta property="og:url" content="https://bu6ble.github.io/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/Pytest%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/">
+<meta property="og:site_name" content="Bubb1e">
+<meta property="og:description" content="理论开篇 关于接口测试  实际上，接口测试的本质仍然是功能测试。它只是将测试的对象从用户界面转移到了应用程序接口(API)上。换句话说，我们不再需要通过UI与系统交互，而是直接通过接口发送请求、接收响应，并验证响应结果是否符合预期。   接口文档的要素  接口名称 接口地址 请求方法（GET, POST, PUT, DELETE等） 请求头信息 请求参数（必选参数与可选参数） 返回值及其数据结构">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-10T11:05:23.000Z">
+<meta property="article:modified_time" content="2025-05-10T14:32:13.760Z">
+<meta property="article:author" content="Bubb1e">
+<meta property="article:tag" content="软件测试">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/bubble.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/bubble.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/bubble.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Pytest项目 | Bubb1e&#39;s BLOG
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bu6ble.github.io","root":"/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":true,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"Let's make it real.","subtitle":{"text":[],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":"siying__li@163.com"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Links":{"icon":"fa-regular fa-link","submenus":{"Friends":"/links","Bookmarks":"/bookmarks"}}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"},"Bookmarks":{"path":"/bookmarks","icon":"fa-regular fa-bookmark"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2024/8/6 00:00:00"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        Bubb1e&#39;s BLOG
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Bubb1e&#39;s BLOG
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    首页
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/categories"
+                                        >
+                                    <i class="fa-regular fa-folder fa-fw"></i>
+                                    分类
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    归档
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-link fa-fw"></i>
+                                    链接
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a href="/links">
+                                                    友情链接
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/bookmarks">
+                                                    BOOKMARKS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                首页
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/categories"
+                        >
+                            <span>
+                                分类
+                            </span>
+                            
+                                <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                归档
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-Links"
+                        >
+                            <span>
+                                链接
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-Links">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links">友情链接</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/bookmarks">BOOKMARKS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/bookmarks"
+                        >
+                            <span>Bookmarks</span>
+                            <i class="fa-regular fa-bookmark fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
+        <div class="label text-third-text-color text-sm">标签</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="label text-third-text-color text-sm">分类</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">20</div>
+        <div class="label text-third-text-color text-sm">文章</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">Pytest项目</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/bubble.png">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Bubb1e</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-05-10 19:05:23</span>
+        <span class="mobile">2025-05-10 19:05:23</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-05-10 22:32:13</span>
+            <span class="mobile">2025-05-10 22:32:13</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/">软件测试</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">测试开发工具</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/">软件测试</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>8.6k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>33 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h1 id="理论开篇"><a href="#理论开篇" class="headerlink" title="理论开篇"></a>理论开篇</h1><ul>
+<li><p>关于接口测试</p>
+<ul>
+<li>实际上，接口测试的本质仍然是功能测试。它只是将测试的对象从用户界面转移到了应用程序接口(API)上。换句话说，我们不再需要通过UI与系统交互，而是直接通过接口发送请求、接收响应，并验证响应结果是否符合预期。</li>
+</ul>
+</li>
+<li><p>接口文档的要素</p>
+<ul>
+<li>接口名称</li>
+<li>接口地址</li>
+<li>请求方法（GET, POST, PUT, DELETE等）</li>
+<li>请求头信息</li>
+<li>请求参数（必选参数与可选参数）</li>
+<li>返回值及其数据结构</li>
+</ul>
+</li>
+<li><p>测试用例的设计：围绕着如何验证接口的功能展开</p>
+<ul>
+<li>单接口测试：验证某一个接口在不同参数组合下的行为是否符合预期。测试点包括：<ul>
+<li>正向测试：使用正确的参数进行请求，验证返回值是否符合预期。</li>
+<li>反向测试：使用错误或异常参数进行请求，验证接口是否能正确处理异常情况。</li>
+<li>边界测试：例如对于要求固定长度的参数（如身份证号），测试其在不同长度下的响应情况。</li>
+</ul>
+</li>
+<li>业务逻辑测试：验证多个接口之间的协同工作。例如，商品下单流程涉及多个接口，如库存检查、订单创建、支付确认等。这些接口之间存在依赖关系，测试时需要保证每个步骤的返回值都正确传递给下一个接口。</li>
+</ul>
+</li>
+<li><p>接口调试与自动化</p>
+<ul>
+<li>在正式编写自动化测试脚本之前，手动调试接口是不可或缺的一步。</li>
+<li>工具如Postman、JMeter等可以帮助我们快速验证接口的功能。通过这些工具，我们可以确认接口是否正常工作，参数是否正确传递，以及返回值是否符合预期。</li>
+<li>自动化测试的实现通常是将手动测试的步骤脚本化，并在代码中实现。<ul>
+<li>例如，使用Python的requests库，我们可以轻松地编写自动化测试脚本，并将这些脚本集成到持续集成（CI）系统中，如Jenkins、GitLab CI等。</li>
+<li>通过CI，我们可以设定每日定时执行测试，并将测试结果推送到团队的沟通工具（如钉钉、Slack）中，确保所有成员都能及时了解到项目的健康状态。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>什么是 DevOps？</p>
+<ul>
+<li>DevOps 是一种将开发（Development）和运维（Operations）结合的文化和实践方法。</li>
+<li>其目标是通过协作和自动化来提高软件交付的速度、频率和可靠性。</li>
+<li>DevOps 强调<strong>持续交付（CD）</strong>和<strong>持续部署（CI/CD）</strong>，即通过自动化构建、测试和部署，确保代码能够快速、安全地推向生产环境。</li>
+</ul>
+</li>
+<li><p>自动化测试在 DevOps 中的作用</p>
+<ul>
+<li>自动化测试在 DevOps 流程中至关重要。</li>
+<li>通过自动化测试，<strong>可以在每次代码变更后立即验证其正确性</strong>，减少引入新 bug 的风险。</li>
+<li>自动化测试的主要作用包括：<ul>
+<li>回归测试：确保新代码不会破坏已有功能。</li>
+<li>持续集成：在每次代码提交时自动运行测试，快速发现和修复问题。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>DevOps 工具链中的自动化测试</p>
+<ul>
+<li>在 DevOps 工具链中，自动化测试通常与持续集成/持续交付工具结合使用。</li>
+<li>例如，Jenkins 是一个广泛使用的 CI/CD 工具，它可以自动化地构建、测试和部署代码。</li>
+<li>通过 Jenkins，测试工程师可以设置流水线，在代码每次变更时自动运行测试并生成报告。</li>
+</ul>
+</li>
+<li><p><strong>测试驱动开发（TDD）</strong></p>
+<ul>
+<li>测试驱动开发（TDD）是一种软件开发流程，强调先编写测试用例，然后编写最小量的代码来通过这些测试。</li>
+<li>TDD 的流程通常如下：<ul>
+<li>编写一个失败的测试：根据需求编写一个测试用例，测试当前未实现的功能。</li>
+<li>编写通过测试的代码：编写代码以通过刚才编写的测试。</li>
+<li>重构：优化代码，同时确保所有测试继续通过。</li>
+<li>TDD 有助于确保代码的每个部分都是经过测试的，并且开发人员能够在早期阶段发现问题。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>行为驱动开发（BDD）</strong></p>
+<ul>
+<li>行为驱动开发（BDD）是一种在 TDD 基础上发展出来的开发流程。</li>
+<li>BDD 强调在开发前，开发人员、测试人员和业务人员共同定义系统的行为，即用户故事。</li>
+<li>BDD 通常使用自然语言编写测试用例，使其更容易被非技术人员理解。例如：<ul>
+<li>“当用户登录成功后，应该跳转到主页。”</li>
+<li>BDD 的主要工具包括 Cucumber 和 Behave，这些工具允许测试用例以人类可读的形式编写，并且能够自动运行。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>从 TDD/BDD 到 CI/CD</p>
+<ul>
+<li>现代软件开发往往将 TDD 或 BDD 与 CI/CD 流程结合起来，以实现高效的测试和交付。具体流程如下：</li>
+<li>TDD/BDD 流程：<ul>
+<li>开发人员在编写代码之前，首先编写测试（TDD）或行为描述（BDD）。</li>
+<li>持续集成（CI）：每次代码提交后，CI 工具（如 Jenkins）自动运行所有测试，确保代码符合预期。</li>
+<li>持续交付/持续部署（CD）：通过 CI 工具，代码在所有测试通过后被自动部署到生产环境，或者准备好进行手动部署。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="关于Python的Request模块"><a href="#关于Python的Request模块" class="headerlink" title="关于Python的Request模块"></a>关于Python的Request模块</h1><ul>
+<li>什么是 Requests 模块？<ul>
+<li>﻿requests﻿ 是 Python 中广泛使用的库，用于简化 HTTP 请求的发送和响应处理。无论是调用 API、下载文件，还是处理复杂的会话管理，﻿requests﻿ 都能提供人性化的解决方案。</li>
+<li>安装：<code>pip install requests</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="基础使用方法"><a href="#基础使用方法" class="headerlink" title="基础使用方法"></a>基础使用方法</h2><ul>
+<li><p>发送POST请求</p>
+<ul>
+<li>POST请求常用于发送数据</li>
+<li>假设测试一个登录接口，需要传递用户名和密码作为请求参数</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置请求的 URL 和参数</span></span><br><span class="line">url = <span class="string">'http://127.0.0.1:8787/login'</span></span><br><span class="line">headers = {<span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>}</span><br><span class="line">data = {<span class="string">'username'</span>: <span class="string">'testuser'</span>, <span class="string">'password'</span>:<span class="string">'testpass'</span>}</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发起 POST 请求</span></span><br><span class="line">response = requests.post(url, header=headers, data=data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看响应状态码和内容</span></span><br><span class="line"><span class="built_in">print</span>(response.status_code)        <span class="comment"># 200 表示请求成功</span></span><br><span class="line"><span class="built_in">print</span>(response.text)               <span class="comment"># 返回服务器响应的文本内容</span></span><br></pre></td></tr></table></figure></div>
+
+
+</li>
+<li><p>GET请求与参数传递</p>
+<ul>
+<li>GET 请求常用于获取服务器资源，如获取商品列表。我们可以传递查询参数，服务器根据参数返回特定的数据。</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">url = <span class="string">'http://127.0.0.1:8787/products'</span></span><br><span class="line">params = {<span class="string">'category'</span>: <span class="string">'electronics'</span>}</span><br><span class="line"></span><br><span class="line">response = requests.get(url, params=params)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出返回的 JSON 数据</span></span><br><span class="line"><span class="built_in">print</span>(response.json())</span><br></pre></td></tr></table></figure></div>
+
+
+</li>
+<li><p>POST 与 GET 请求的区别</p>
+<ul>
+<li>GET 请求：用于从服务器获取数据，查询参数通过 URL 传递，适用于获取资源。</li>
+<li>POST 请求：用于提交数据到服务器，参数在请求体中，适用于数据提交或修改。</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据传输方式"><a href="#数据传输方式" class="headerlink" title="数据传输方式"></a>数据传输方式</h2><ul>
+<li>POST 请求的数据传输方式主要有两种：表单数据 和 JSON 数据。</li>
+<li>表单提交</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data = {<span class="string">'username'</span>: <span class="string">'testuser'</span>, <span class="string">'password'</span>:<span class="string">'testpass'</span>}</span><br><span class="line">response = requests.post(url, data=data)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<ul>
+<li>JSON提交</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">json_data = {<span class="string">'username'</span>: <span class="string">'testuser'</span>, <span class="string">'password'</span>:<span class="string">'testpass'</span>}</span><br><span class="line">response = requests.post(json, json=json_data)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="会话管理与持久性连接"><a href="#会话管理与持久性连接" class="headerlink" title="会话管理与持久性连接"></a>会话管理与持久性连接</h2><ul>
+<li>在一些需要多次请求的场景下，使用会话对象 ﻿Session﻿ 可以管理持久性连接，避免重复登录等繁琐操作。尤其是涉及用户登录、会话保持的场景，﻿Session﻿ 的使用至关重要。</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建会话对象</span></span><br><span class="line">session = requests.Session()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用会话进行登录</span></span><br><span class="line">login_url = <span class="string">'http://127.0.0.1:8787/login'</span></span><br><span class="line">session.post(login_url, data={<span class="string">'username'</span>: <span class="string">'testuser'</span>, <span class="string">'password'</span>:<span class="string">'testpass'</span>})</span><br><span class="line"></span><br><span class="line"><span class="comment"># 登录后，访问受保护的资源</span></span><br><span class="line">protected_url = <span class="string">'http://127.0.0.1:8787/protected'</span></span><br><span class="line">response = session.get(protected_url)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="处理响应结果"><a href="#处理响应结果" class="headerlink" title="处理响应结果"></a>处理响应结果</h2><ul>
+<li><p>不仅关心接口的响应状态码，还需要处理接口返回的数据格式。</p>
+</li>
+<li><p>﻿requests﻿ 支持多种返回格式</p>
+<ul>
+<li>文本类型</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(response.text)    <span class="comment"># 返回文本格式的响应</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>JSON类型</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(response.json())   <span class="comment"># 解析JSON的响应</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>二进制内容</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(response.content)  <span class="comment"># 获取二进制内容，如图片或文件</span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>如果遇到编码问题，可以使用<code>response.encoding</code>或通过手动编码方式来处理</p>
+</li>
+</ul>
+<h2 id="应对HTTPS证书验证"><a href="#应对HTTPS证书验证" class="headerlink" title="应对HTTPS证书验证"></a>应对HTTPS证书验证</h2><p>在测试 HTTPS 接口时，可能会遇到证书验证错误，尤其是在开发环境中。可以通过以下方式禁用证书验证：</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response = requests.get(url, verify=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="错误处理与异常捕获"><a href="#错误处理与异常捕获" class="headerlink" title="错误处理与异常捕获"></a>错误处理与异常捕获</h2><ul>
+<li>requests提供强大的异常处理机制，可以捕获网络错误或超时问题</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    response = requests.get(url, timeout=<span class="number">5</span>)</span><br><span class="line">    response.raise_for_status()    <span class="comment"># 检查请求是否成功</span></span><br><span class="line"><span class="keyword">except</span> requests.exceptions.HTTPError <span class="keyword">as</span> http_error:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f'HTTP error occured:<span class="subst">{http_err}</span>)</span></span><br><span class="line"><span class="string">except requests.exceptions.RequestException as err:</span></span><br><span class="line"><span class="string">    print(f'</span>Other error occured:{err}<span class="string">')</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h1 id="API测试中使用YAML管理测试用例"><a href="#API测试中使用YAML管理测试用例" class="headerlink" title="API测试中使用YAML管理测试用例"></a>API测试中使用YAML管理测试用例</h1><p>在接口自动化测试中，管理大量的接口信息和测试用例是一项复杂的任务。为了提高可读性和可维护性，使用 YAML 文件来管理这些信息是一个不错的选择。</p>
+<h2 id="忽略HTTPS证书验证"><a href="#忽略HTTPS证书验证" class="headerlink" title="忽略HTTPS证书验证"></a>忽略HTTPS证书验证</h2><ul>
+<li>在开始之前，先拓展一个小知识点。当我们使用 requests 模块发送 HTTPS 请求时，如果目标网站的 SSL 证书不被信任，可能会导致请求失败。为了解决这个问题，可以在请求中添加 verify=False 参数，忽略 SSL 证书验证。</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">response = requests.get(<span class="string">'https://example.com'</span>, verify=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>注意： 在生产环境中，忽略 SSL 证书验证可能会带来安全风险，建议仅在测试环境中使用。</li>
+</ul>
+<h2 id="了解YAML文件"><a href="#了解YAML文件" class="headerlink" title="了解YAML文件"></a>了解YAML文件</h2><h3 id="什么是YAML"><a href="#什么是YAML" class="headerlink" title="什么是YAML"></a>什么是YAML</h3><ul>
+<li>YAML（YAML Ain’t Markup Language）是一种专门用来写配置文件的语言，具有简洁、易读的特点。相比 JSON，YAML 更加人性化，适合用来编写配置文件和数据交换。</li>
+</ul>
+<h3 id="YAML的基本语法"><a href="#YAML的基本语法" class="headerlink" title="YAML的基本语法"></a>YAML的基本语法</h3><ul>
+<li>大小写敏感</li>
+<li>使用缩进表示层级关系</li>
+<li>不允许使用制表符缩进，只能使用空格</li>
+</ul>
+<h3 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h3><ul>
+<li>键值对：<code>key: value</code></li>
+<li>嵌套结果：</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">parent:</span> </span><br><span class="line">    <span class="attr">child1:</span> <span class="string">value1</span></span><br><span class="line">    <span class="attr">child2:</span> <span class="string">value2</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>列表：</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">items:</span> </span><br><span class="line">	<span class="bullet">-</span> <span class="string">item1</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">item2</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">item3</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>冒号后面必须要有空格</li>
+</ul>
+<h2 id="编写接口测试用例的YAML文件"><a href="#编写接口测试用例的YAML文件" class="headerlink" title="编写接口测试用例的YAML文件"></a>编写接口测试用例的YAML文件</h2><ul>
+<li>下面以用户登录接口为例，演示如何将接口信息和测试用例写入 YAML 文件。</li>
+</ul>
+<h3 id="定义基本结构"><a href="#定义基本结构" class="headerlink" title="定义基本结构"></a>定义基本结构</h3><ul>
+<li>创建名为<code>login.yaml</code>的文件</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 接口基本信息</span></span><br><span class="line"><span class="attr">base_info:</span></span><br><span class="line">	<span class="attr">api_name:</span> <span class="string">用户登录</span></span><br><span class="line">	<span class="attr">url:</span> <span class="string">/login</span></span><br><span class="line">	<span class="attr">method:</span> <span class="string">post</span></span><br><span class="line">	<span class="attr">headers:</span></span><br><span class="line">		<span class="attr">Content-Type:</span> <span class="string">application/x-www-form-urlencoded</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="编写测试用例"><a href="#编写测试用例" class="headerlink" title="编写测试用例"></a>编写测试用例</h3><div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试用例</span></span><br><span class="line"><span class="attr">test_cases:</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">case_name:</span> <span class="string">正确的用户名和密码</span></span><br><span class="line">	  <span class="attr">data:</span></span><br><span class="line">	  	<span class="attr">username:</span> <span class="string">test_user</span></span><br><span class="line">	  	<span class="attr">password:</span> <span class="string">test_pass</span></span><br><span class="line">	  <span class="attr">validations:</span></span><br><span class="line">	  	<span class="bullet">-</span> <span class="attr">contains:</span> <span class="string">登录成功</span></span><br><span class="line">	  <span class="attr">extract:</span></span><br><span class="line">	  	<span class="bullet">-</span> <span class="string">token</span></span><br><span class="line">	  </span><br><span class="line">	<span class="bullet">-</span> <span class="attr">case_name:</span> <span class="string">错误的用户名</span></span><br><span class="line">	  <span class="attr">data:</span></span><br><span class="line">	  	<span class="attr">username:</span> <span class="string">wrong_user</span></span><br><span class="line">	  	<span class="attr">password:</span> <span class="string">test_pass</span></span><br><span class="line">	  <span class="attr">validations:</span></span><br><span class="line">	  	<span class="bullet">-</span> <span class="attr">contains:</span> <span class="string">用户名或密码错误</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>完整的YAML文件</p>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># login.yaml</span></span><br><span class="line"><span class="attr">base_info:</span></span><br><span class="line">	<span class="attr">api_name:</span> <span class="string">用户登录</span></span><br><span class="line">	<span class="attr">url:</span> <span class="string">/login</span></span><br><span class="line">	<span class="attr">method:</span> <span class="string">post</span></span><br><span class="line">	<span class="attr">headers:</span></span><br><span class="line">		<span class="attr">Content-Type:</span> <span class="string">application/x-www-form-urlencoded</span></span><br><span class="line"></span><br><span class="line"><span class="attr">test_cases:</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">case_name:</span> <span class="string">正确的用户名和密码</span></span><br><span class="line">	  <span class="attr">data:</span></span><br><span class="line">	  	<span class="attr">username:</span> <span class="string">test_user</span></span><br><span class="line">	  	<span class="attr">password:</span> <span class="string">test_pass</span></span><br><span class="line">	  <span class="attr">validations:</span></span><br><span class="line">	  	<span class="bullet">-</span> <span class="attr">contains:</span> <span class="string">登录成功</span></span><br><span class="line">	  <span class="attr">extract:</span></span><br><span class="line">	  	<span class="bullet">-</span> <span class="string">token</span></span><br><span class="line">	  </span><br><span class="line">	<span class="bullet">-</span> <span class="attr">case_name:</span> <span class="string">错误的用户名</span></span><br><span class="line">	  <span class="attr">data:</span></span><br><span class="line">	  	<span class="attr">username:</span> <span class="string">wrong_user</span></span><br><span class="line">	  	<span class="attr">password:</span> <span class="string">test_pass</span></span><br><span class="line">	  <span class="attr">validations:</span></span><br><span class="line">	  	<span class="bullet">-</span> <span class="attr">contains:</span> <span class="string">用户名或密码错误</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="在Python中读取YAML文件"><a href="#在Python中读取YAML文件" class="headerlink" title="在Python中读取YAML文件"></a>在Python中读取YAML文件</h2><ul>
+<li>安装PyYaml库：<code>pip install pyyaml</code></li>
+</ul>
+<h3 id="读取函数"><a href="#读取函数" class="headerlink" title="读取函数"></a>读取函数</h3><ul>
+<li><p>编写读取函数</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_yaml</span>(<span class="params">file_path</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    	读取 YAML 文件并返回数据</span></span><br><span class="line"><span class="string">    	:param file_path: YAML 文件路径</span></span><br><span class="line"><span class="string">    	:return: 文件内容</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            <span class="keyword">return</span> yaml.safe_load(f)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"读取 YAML 文件出错：<span class="subst">{e}</span>"</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>测试读取函数</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data = read_yaml(<span class="string">'login.yaml'</span>)</span><br><span class="line"><span class="built_in">print</span>(data)</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h3 id="使用读取的数据发送请求"><a href="#使用读取的数据发送请求" class="headerlink" title="使用读取的数据发送请求"></a>使用读取的数据发送请求</h3><ul>
+<li>封装请求方法</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">APIRequest</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">send_request</span>(<span class="params">self, method, url, data=<span class="literal">None</span>, headers=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            response = requests.request(</span><br><span class="line">            	method=method,</span><br><span class="line">                url=url,</span><br><span class="line">                data=data,</span><br><span class="line">                headers=headers,</span><br><span class="line">                verify=<span class="literal">False</span>    <span class="comment"># 忽略SSL证书验证</span></span><br><span class="line">            )</span><br><span class="line">            <span class="keyword">return</span> response</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"请求出错:<span class="subst">{e}</span>"</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<ul>
+<li>组装请求数据并发送请求</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    base_url = <span class="string">'https://example.com'</span></span><br><span class="line">    yaml_data = read_yaml(<span class="string">'login.yaml'</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> yaml_data:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    base_info = yaml_data.get(<span class="string">'base_info'</span>,{})</span><br><span class="line">    test_cases = yaml_data.get(<span class="string">'test_cases'</span>,[])</span><br><span class="line">    </span><br><span class="line">    api_name = base_info.get(<span class="string">'api_name'</span>)</span><br><span class="line">    uri = base_url + base_info.get(<span class="string">'uri'</span>,<span class="string">''</span>)</span><br><span class="line">    method = base_info.get(<span class="string">'method'</span>, <span class="string">'get'</span>)</span><br><span class="line">    headers = base_info.get(<span class="string">'headers'</span>, {})</span><br><span class="line">    </span><br><span class="line">    api_request = APIRequest()</span><br><span class="line">    <span class="keyword">for</span> <span class="keyword">case</span> <span class="keyword">in</span> test_cases:</span><br><span class="line">        case_name = <span class="keyword">case</span>.get(<span class="string">'case_name'</span>)</span><br><span class="line">        data = <span class="keyword">case</span>.get(<span class="string">'data'</span>, {})</span><br><span class="line">        validations = <span class="keyword">case</span>.get(<span class="string">'validations'</span>, [])</span><br><span class="line">        extract = <span class="keyword">case</span>.get(<span class="string">'extract'</span>, [])</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f"执行用例：<span class="subst">{case_name}</span>"</span>)</span><br><span class="line">        </span><br><span class="line">        response = api_request.send_request(</span><br><span class="line">        	method=method,</span><br><span class="line">            url=url,</span><br><span class="line">            data=data,</span><br><span class="line">            headers=headers</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> response:</span><br><span class="line">            response_text = response.text</span><br><span class="line">            <span class="comment"># 进行断言验证</span></span><br><span class="line">            <span class="keyword">for</span> validation <span class="keyword">in</span> validations:</span><br><span class="line">                <span class="keyword">if</span> <span class="string">'contains'</span> <span class="keyword">in</span> validation:</span><br><span class="line">                    expected_text = validation[<span class="string">'contains'</span>]</span><br><span class="line">                    <span class="keyword">assert</span> expected_text <span class="keyword">in</span> response_text, <span class="string">f"期望包含：<span class="subst">{expected_text}</span>"</span></span><br><span class="line">            <span class="comment"># 进行数据提取</span></span><br><span class="line">            <span class="comment"># ... 根据需要实现</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"用例'<span class="subst">{casez_name}</span> 执行成功！'"</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"用例'<span class="subst">{casez_name}</span> 执行失败！'"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="处理编码问题"><a href="#处理编码问题" class="headerlink" title="处理编码问题"></a>处理编码问题</h3><p>在读取文件时，可能会遇到编码问题，常见的是 utf-8 和 gbk 编码不一致导致的错误。为确保读取正确，可以在打开文件时指定编码：</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="comment"># 读取文件内容 </span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="在Python中将接口返回值写入指定的YAML文件"><a href="#在Python中将接口返回值写入指定的YAML文件" class="headerlink" title="在Python中将接口返回值写入指定的YAML文件"></a>在Python中将接口返回值写入指定的YAML文件</h2><ul>
+<li>在自动化测试和接口测试中，我们经常需要将接口的返回值提取并保存，以供后续测试使用。本节将详细讲解如何使用 Python 将接口的返回值写入到指定的 YAML 文件中。同时，我们还会介绍 JSON 的序列化和反序列化，以帮助更好地处理数据。</li>
+</ul>
+<h3 id="定义读取和写入YAML数据的工具类"><a href="#定义读取和写入YAML数据的工具类" class="headerlink" title="定义读取和写入YAML数据的工具类"></a>定义读取和写入YAML数据的工具类</h3><ul>
+<li>首先，我们需要定义一个工具类，用于读取和写入 YAML 文件。我们可以将读取和写入的方法封装到一个类中，便于重复使用。</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">YAMLUtil</span>:</span><br><span class="line">    <span class="string">"""读取和写入 YAML 数据的工具类"""</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, file_path=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        	初始化方法：接受一个文件路径，如果未提供路径，使用默认的“extract.yaml”</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> file_path <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="variable language_">self</span>.file_path = file_path</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="variable language_">self</span>.file_path = <span class="string">'extract.yaml'</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>在 <code>__init__</code> 方法中，我们允许用户在实例化类时传入一个文件路径。如果没有传入，则使用默认的<code>extract.yaml</code>文件。</p>
+</li>
+<li><p>将数据写入到YAML文件</p>
+</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">YAMLUtil</span>:</span><br><span class="line">    <span class="comment"># ... 前面的代码如上</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">write_yaml</span>(<span class="params">self, data</span>):</span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        	将数据写入到YAML文件中</span></span><br><span class="line"><span class="string">        	:param data: 要写入的数据；必须是字典类型</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 类型检查</span></span><br><span class="line">        <span class="comment"># 检查传入的数据是否为字典类型，如果不是，抛出 ValueError 异常</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(data, <span class="built_in">dict</span>):</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"写入的数据必须为字典类型"</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 确保目录存在</span></span><br><span class="line">        <span class="comment"># 如果目录不存在，使用 os.makedirs 创建目录</span></span><br><span class="line">        dir_name = os.path.dirname(<span class="variable language_">self</span>.file_path)</span><br><span class="line">        <span class="keyword">if</span> dir_name <span class="keyword">and</span> <span class="keyword">not</span> os.path.exists(dir_name):</span><br><span class="line">            os.makedirs(dir_name)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 写入数据到YAML文件</span></span><br><span class="line">        <span class="comment"># 模式为 'a'，表示追加写入</span></span><br><span class="line">        <span class="comment"># 使用 yaml.dump 方法将数据写入文件</span></span><br><span class="line">        <span class="comment"># allow_unicode=True 确保可以正确写入中文字符</span></span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(<span class="variable language_">self</span>.file_path, <span class="string">'a'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            yaml.dump(data, f, allow_unicode=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<ul>
+<li>在文件操作中，写入模式非常重要，主要有以下两种模式：<ul>
+<li>‘w’ 模式（写入模式）：每次写入都会覆盖文件原有的内容。</li>
+<li>‘a’ 模式（追加模式）：每次写入都会在文件末尾追加内容。</li>
+<li>在上面的示例中，我们使用了 ‘a’ 模式，以确保每次写入的数据不会覆盖之前的数据。如果希望每次都覆盖文件，可以将模式改为 ‘w’。</li>
+</ul>
+</li>
+</ul>
+<h3 id="示例：将接口返回的Token写入到YAML文件"><a href="#示例：将接口返回的Token写入到YAML文件" class="headerlink" title="示例：将接口返回的Token写入到YAML文件"></a>示例：将接口返回的Token写入到YAML文件</h3><p>假设我们有一个登录接口，返回了一个包含 Token 的响应。我们希望将这个 Token 写入到 YAML 文件中。</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟接口响应</span></span><br><span class="line"><span class="comment"># 实际使用中可以直接使用 requests 库的响应对象</span></span><br><span class="line">response = requests.Response()</span><br><span class="line">response._content = <span class="string">b'{"token": "abc123", "expires_in": 3600}</span></span><br><span class="line"><span class="string">response.status_code = 200</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 从响应中提取Token</span></span><br><span class="line"><span class="string">token = response.json().get('</span>token<span class="string">')</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 实例化 YAML 工具类</span></span><br><span class="line"><span class="string">yaml_util = YAMLUtil()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 准备写入的数据</span></span><br><span class="line"><span class="string">data_to_write = {'</span>token<span class="string">': token}</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 写入数据到YAML文件</span></span><br><span class="line"><span class="string">yaml_util.write_yaml(data_to_write)</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="扩展：JSON的序列化和反序列化"><a href="#扩展：JSON的序列化和反序列化" class="headerlink" title="扩展：JSON的序列化和反序列化"></a>扩展：JSON的序列化和反序列化</h2><ul>
+<li>在接口测试中，我们经常需要处理 JSON 数据。因此，理解 JSON 的序列化和反序列化非常重要。</li>
+<li>什么是 JSON 序列化和反序列化<ul>
+<li>序列化：将 Python 对象（如字典）转换为 JSON 格式的字符串。</li>
+<li>反序列化：将 JSON 格式的字符串转换为 Python 对象。</li>
+</ul>
+</li>
+<li>JSON序列化示例</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">data = {<span class="string">'message'</span>: <span class="string">'success'</span>, <span class="string">'code'</span>: <span class="number">200</span>}</span><br><span class="line"></span><br><span class="line">json_str = json.dumps(data, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line"><span class="built_in">print</span>(json_str)   <span class="comment"># 输出 {"message": "success", "code": 200}</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>处理Unicode字符</p>
+<ul>
+<li>默认情况下，<code>json.dumps</code> 会将非 ASCII 字符转换为 Unicode 编码。为了正确显示中文，需要设置 <code>ensure_ascii=False</code>。</li>
+</ul>
+</li>
+<li><p>JSON反序列化示例</p>
+</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># JSON 字符串</span></span><br><span class="line">json_str = <span class="string">'{"message": "success", "code": 200}'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 反序列化为字典</span></span><br><span class="line">data = json.loads(json_str)</span><br><span class="line"><span class="built_in">print</span>(data)   <span class="comment"># 输出{'message': 'success', 'code': 200}</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="在YAML测试用例中实现参数的动态替换"><a href="#在YAML测试用例中实现参数的动态替换" class="headerlink" title="在YAML测试用例中实现参数的动态替换"></a>在YAML测试用例中实现参数的动态替换</h2><ul>
+<li>在 API 测试中，将参数硬编码到测试用例中既不实用也不具备可扩展性。像令牌、加密密码或动态生成的值等参数需要以一种在运行时无需修改测试脚本就能更新或替换的方式进行处理。这就是参数动态替换或“热加载”的作用所在。</li>
+<li>在本文中，我们将探讨如何使用 Python 在 YAML 测试用例中实现参数的动态替换。我们将涵盖创建一个 debugtalk 模块来存放我们的动态函数、读取如令牌等提取的数据、实现 MD5 加密、解析 YAML 文件中的占位符，以及使用反射动态调用函数。</li>
+</ul>
+<h3 id="硬编码参数问题"><a href="#硬编码参数问题" class="headerlink" title="硬编码参数问题"></a>硬编码参数问题</h3><ul>
+<li><p>在创建 API 测试用例时，您可能会倾向于将参数直接硬编码到 YAML 文件中：</p>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">request:</span></span><br><span class="line">	<span class="attr">method:</span> <span class="string">POST</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">/api/login</span></span><br><span class="line">    <span class="attr">headers:</span></span><br><span class="line">    	<span class="attr">Content-Type:</span> <span class="string">application/json</span></span><br><span class="line">    <span class="attr">json:</span></span><br><span class="line">    	<span class="attr">username:</span> <span class="string">"user1"</span></span><br><span class="line">    	<span class="attr">password:</span> <span class="string">"123456"</span>   <span class="comment"># 硬编码的密码</span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>但是，这种方法存在几个问题：</p>
+<ul>
+<li>动态数据：某些参数需要在运行时生成或转换，例如加密密码或时间戳。</li>
+<li>可维护性：硬编码的值使得在多个测试用例中更新或管理参数变得困难。</li>
+<li>可重用性：您无法在不修改文件的情况下使用不同的数据重用测试用例。</li>
+</ul>
+</li>
+<li><p>为了解决这些问题，我们需要一种在测试用例中动态替换参数的方法。</p>
+</li>
+</ul>
+<h3 id="引入debugtalk模块"><a href="#引入debugtalk模块" class="headerlink" title="引入debugtalk模块"></a>引入debugtalk模块</h3><ul>
+<li>debugtalk 模块是我们框架中的核心组件，它包含了所有需要的动态函数和工具，用于参数替换。通过在此模块中定义函数，我们可以直接在 YAML 文件中调用它们。</li>
+<li>创建 <code>debugtalk.py</code> 模块<ul>
+<li>在您的项目中创建一个名为 <code>debugtalk.py</code> 的文件   <code>touch debugtalk.py</code></li>
+<li>在 <code>debugtalk.py</code> 中，您可以定义执行诸如<strong>读取数据、加密密码或生成令牌</strong>等任务的函数。</li>
+</ul>
+</li>
+</ul>
+<h4 id="动态读取提取的数据"><a href="#动态读取提取的数据" class="headerlink" title="动态读取提取的数据"></a>动态读取提取的数据</h4><ul>
+<li>假设我们有一个令牌需要包含在请求的头部，但这个令牌是在运行时生成的，并在先前的 API 调用后存储在一个提取文件中。</li>
+<li>提取文件（<code>extract.yaml</code>）</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">token:</span> <span class="string">"sdasdasfsdgfdgsdgfsg"</span></span><br><span class="line"><span class="attr">product_ids:</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">"123456"</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">"234567"</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">"345678"</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>需要在发送请求时动态读取这个令牌</p>
+</li>
+<li><p>因此在 <code>debugtalk.py</code> 中，添加一个函数从提取文件中读取数据</p>
+</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_extract</span>(<span class="params">key</span>):</span><br><span class="line">    <span class="string">""" 根据提供的键 从 yaml文件 中读取值 """</span></span><br><span class="line">    extract_path = os.path.join(os.getcwd(), <span class="string">'extract.yaml'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(extract_path):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"提取的文件不存在"</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">   	<span class="keyword">with</span> <span class="built_in">open</span>(extract_path, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        data = yaml.safe_load(f)</span><br><span class="line">    <span class="keyword">return</span> data.get(key)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="实现MD5加密函数"><a href="#实现MD5加密函数" class="headerlink" title="实现MD5加密函数"></a>实现MD5加密函数</h4><ul>
+<li><p>我们可能需要在发送请求前使用 MD5 加密密码。</p>
+</li>
+<li><p>在 <code>debugtalk.py</code> 中，添加下述函数</p>
+</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">md5_encrypt</span>(<span class="params">password</span>):</span><br><span class="line">    <span class="string">""" 使用MD5加密密码"""</span></span><br><span class="line">    md5 = hashlib.md5()</span><br><span class="line">    md5.update(password.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    <span class="keyword">return</span> md5.hexdigest()</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="解析并替换YAML文件中的占位符"><a href="#解析并替换YAML文件中的占位符" class="headerlink" title="解析并替换YAML文件中的占位符"></a>解析并替换YAML文件中的占位符</h3><ul>
+<li>可以在YAML文件中使用占位符来指示需要动态替换的值</li>
+</ul>
+<h4 id="在YAML中使用占位符"><a href="#在YAML中使用占位符" class="headerlink" title="在YAML中使用占位符"></a>在YAML中使用占位符</h4><div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">request:</span></span><br><span class="line">	<span class="attr">method:</span> <span class="string">POST</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">/api/login</span></span><br><span class="line">    <span class="attr">headers:</span></span><br><span class="line">    	<span class="attr">Content-Type:</span> <span class="string">application/json</span></span><br><span class="line">    	<span class="attr">Authorization:</span> <span class="string">"Bearer ${read_extract(token)}"</span></span><br><span class="line">    <span class="attr">json:</span></span><br><span class="line">    	<span class="attr">username:</span> <span class="string">"user1"</span></span><br><span class="line">    	<span class="attr">password:</span> <span class="string">"${md5_encrypt(123456)}"</span>   </span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="解析并替换占位符"><a href="#解析并替换占位符" class="headerlink" title="解析并替换占位符"></a>解析并替换占位符</h4><ul>
+<li>在新的模块 <code>api_util.py</code> 中创建一个实用函数来解析和替换这些占位符</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">from</span> debugtalk <span class="keyword">import</span> read_extract, md5_encrypt</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">replace_placeholder</span>(<span class="params">data</span>):</span><br><span class="line">    <span class="string">""" 用实际值替换数据中的占位符 """</span></span><br><span class="line">    pattern = re.<span class="built_in">compile</span>(<span class="string">r"\$\{(\w+)(\((.*?)\))?\}"</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(data, <span class="built_in">dict</span>):</span><br><span class="line">        data_str = <span class="built_in">str</span>(data)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data_str = data</span><br><span class="line">    </span><br><span class="line">    matches = pattern.findall(data_str)</span><br><span class="line">    <span class="keyword">for</span> func_name, _, args <span class="keyword">in</span> matches:</span><br><span class="line">        func = <span class="built_in">globals</span>().get(func_name)</span><br><span class="line">        <span class="keyword">if</span> func:</span><br><span class="line">            <span class="keyword">if</span> args:</span><br><span class="line">                args_list = args.split(<span class="string">','</span>)</span><br><span class="line">                value = func(*args_list)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                value = func()</span><br><span class="line">            placeholder = <span class="string">f"${{<span class="subst">{func_name}</span>(<span class="subst">{args}</span>)}}"</span></span><br><span class="line">            data_str = data_str.replace(placeholder, value)</span><br><span class="line">   <span class="keyword">return</span> <span class="built_in">eval</span>(data_str)</span><br><span class="line">            </span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>函数使用正则表达式查找占位符，并通过调用 <code>debugtalk.py</code> 中相应函数来替换它们。</li>
+</ul>
+<h3 id="使用反射动态调用函数"><a href="#使用反射动态调用函数" class="headerlink" title="使用反射动态调用函数"></a>使用反射动态调用函数</h3><ul>
+<li>Python的反射功能允许在运行时按名称调用函数，对于参数动态替换十分重要。</li>
+</ul>
+<h4 id="使用-getattr-进行反射"><a href="#使用-getattr-进行反射" class="headerlink" title="使用 getattr 进行反射"></a>使用 <code>getattr</code> 进行反射</h4><ul>
+<li>在<code>api_util.py</code> 中，修改<code>replace_placeholder</code>函数以使用<code>getattr</code>：</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">replace_placeholder</span>(<span class="params">data</span>):</span><br><span class="line">    <span class="string">""" 用实际值替换数据中的占位符 """</span></span><br><span class="line">    pattern = re.<span class="built_in">compile</span>(<span class="string">r"\$\{(\w+)(\((.*?)\))?\}"</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(data, <span class="built_in">dict</span>):</span><br><span class="line">        data_str = <span class="built_in">str</span>(data)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data_str = data</span><br><span class="line">    </span><br><span class="line">    matches = pattern.findall(data_str)</span><br><span class="line">    <span class="keyword">for</span> func_name, _, args <span class="keyword">in</span> matches:</span><br><span class="line">        func = <span class="built_in">getattr</span>(debugtalk, func_name, <span class="literal">None</span>)</span><br><span class="line">        <span class="keyword">if</span> func:</span><br><span class="line">            <span class="keyword">if</span> args:</span><br><span class="line">                args_list = [arg.strip() <span class="keyword">for</span> arg <span class="keyword">in</span> args.split(<span class="string">','</span>)]</span><br><span class="line">                value = func(*args_list)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                value = func()</span><br><span class="line">            placeholder = <span class="string">f"${{<span class="subst">{func_name}</span>(<span class="subst">{args}</span>)}}"</span></span><br><span class="line">            data_str = data_str.replace(placeholder, <span class="string">f'"<span class="subst">{value}</span>"'</span>)</span><br><span class="line">   <span class="keyword">return</span> <span class="built_in">eval</span>(data_str)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>这里<code>getattr</code> 用于按名称从<code>debugtalk.py</code>中获取函数。</li>
+</ul>
+<h3 id="处理不同的数据类型和场景"><a href="#处理不同的数据类型和场景" class="headerlink" title="处理不同的数据类型和场景"></a>处理不同的数据类型和场景</h3><ul>
+<li>在某些情况下，提取的数据可能是列表或字典，需要适当处理它们</li>
+</ul>
+<h4 id="读取列表元素"><a href="#读取列表元素" class="headerlink" title="读取列表元素"></a>读取列表元素</h4><ul>
+<li>假设在<code>extract.yaml</code>中有一个产品ID的列表</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">product_ids:</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">"123456"</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">"234567"</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">"345678"</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>修改<code>read_extract</code>处理索引</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_extract</span>(<span class="params">key</span>):</span><br><span class="line">    <span class="string">""" 根据提供的键和索引 从 yaml文件 中读取值 """</span></span><br><span class="line">    extract_path = os.path.join(os.getcwd(), <span class="string">'extract.yaml'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(extract_path):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"提取的文件不存在"</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">   	<span class="keyword">with</span> <span class="built_in">open</span>(extract_path, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        data = yaml.safe_load(f)</span><br><span class="line">    value = data.get(key)</span><br><span class="line">    <span class="comment"># 检查变量 value 是否为列表（list）类型。</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(value, <span class="built_in">list</span>) <span class="keyword">and</span> index <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> value[<span class="built_in">int</span>(index)]</span><br><span class="line">    <span class="keyword">return</span> value</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="更新占位符"><a href="#更新占位符" class="headerlink" title="更新占位符"></a>更新占位符</h4><ul>
+<li>在YAML文件中</li>
+</ul>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="string">"/api/products/${read_extract(product_ids), 0}"</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>则，<code>read_extract</code>可以处理索引以检索特定的产品ID</li>
+</ul>
+<h1 id="Pytest使用技巧"><a href="#Pytest使用技巧" class="headerlink" title="Pytest使用技巧"></a>Pytest使用技巧</h1><ul>
+<li>在进行接口自动化测试时，Pytest 是一个非常成熟且易于上手的单元测试框架。相比于 ﻿unittest﻿，Pytest 更加灵活，功能更加强大。</li>
+</ul>
+<h2 id="Pytest简介"><a href="#Pytest简介" class="headerlink" title="Pytest简介"></a>Pytest简介</h2><ul>
+<li>Pytest 是一个用于编写和运行测试用例的开源框架，支持简单灵活的测试编写方式，能够与多种工具和库集成，如 requests﻿、﻿Selenium﻿ 等，适用于接口自动化、Web 自动化、APP 自动化测试等。</li>
+</ul>
+<h2 id="Pytest特性"><a href="#Pytest特性" class="headerlink" title="Pytest特性"></a>Pytest特性</h2><ul>
+<li><strong>与其他库的集成</strong><ul>
+<li>Pytest 可以与 ﻿requests﻿ 结合，用于发起接口请求；也可以与 ﻿Selenium﻿ 集成，实现 Web 自动化测试。此外，还支持 APP 自动化测试。</li>
+</ul>
+</li>
+<li><strong>测试用例的跳过和失败重跑</strong><ul>
+<li>Pytest 提供了简单的方式来实现测试用例的跳过和失败重跑机制，这在 ﻿unittest﻿ 中相对复杂。</li>
+</ul>
+</li>
+<li><strong>生成美观的测试报告</strong><ul>
+<li>通过与 Allure 等工具结合，Pytest 可以生成美观且易于分析的测试报告，方便结果展示和问题定位。</li>
+</ul>
+</li>
+<li><strong>持续集成</strong><ul>
+<li>Pytest 可以与 Jenkins 等持续集成工具集成，实现自动化的测试和部署流程。</li>
+</ul>
+</li>
+<li><strong>丰富的插件支持</strong><ul>
+<li>Pytest 拥有大量的插件，可以扩展其功能，如 <code>﻿pytest-html﻿、﻿pytest-xdist﻿、﻿pytest-rerunfailures﻿ </code>等</li>
+</ul>
+</li>
+</ul>
+<h3 id="常用插件"><a href="#常用插件" class="headerlink" title="常用插件"></a>常用插件</h3><ul>
+<li><p><code>pytest-html﻿</code>：生成HTML格式的测试报告。</p>
+</li>
+<li><p><code>﻿pytest-xdist</code>：实现测试用例的分布式执行，支持多进程并发，提高测试效率。</p>
+</li>
+<li><p><code>pytest-ordering</code>：控制测试用例的执行顺序。</p>
+</li>
+<li><p><code>pytest-rerunfailures</code>：在测试用例失败后自动重跑，适用于临时性失败的用例。</p>
+</li>
+<li><p><code>allure-pytest</code>：与Allure集成，生成美观的测试报告。</p>
+</li>
+<li><p>插件的安装：使用<code>pip</code>安装所需的插件</p>
+</li>
+</ul>
+<h2 id="Pytest框架规则及运行方法"><a href="#Pytest框架规则及运行方法" class="headerlink" title="Pytest框架规则及运行方法"></a>Pytest框架规则及运行方法</h2><ul>
+<li>在使用 Pytest 进行测试之前，需要了解测试用例的编写规则和运行方式。</li>
+</ul>
+<h3 id="测试用例的编写规则"><a href="#测试用例的编写规则" class="headerlink" title="测试用例的编写规则"></a>测试用例的编写规则</h3><ul>
+<li>模块名称：测试模块（Python文件）必须以<code>test_</code>开头或以<code>_test</code>结尾<ul>
+<li>如：<code>test_login.py</code>、<code>login_test.py</code></li>
+</ul>
+</li>
+<li>测试类：测试类必须以<code>Test</code>开头，且不能包含<code>__init__</code>方法<ul>
+<li>如：<code>class TestLogin: pass</code></li>
+</ul>
+</li>
+<li>测试方法：测试方法必须以<code>test_</code>开头<ul>
+<li>如：<code>def test_case01(self) : pass</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="测试用例的运行方式"><a href="#测试用例的运行方式" class="headerlink" title="测试用例的运行方式"></a>测试用例的运行方式</h3><h4 id="主函数的运行方式"><a href="#主函数的运行方式" class="headerlink" title="主函数的运行方式"></a>主函数的运行方式</h4><ul>
+<li>在代码中调用<code>pytest.main()</code>，并传入参数</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pytest.main([<span class="string">"-vs"</span>, <span class="string">"./test_cases/"</span>, <span class="string">"--reruns"</span>, <span class="string">"2"</span>])</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>常用参数：<ul>
+<li><code>-s</code>：显示打印输出等调试信息</li>
+<li><code>-v</code>：详细模式，输出更详细的执行信息</li>
+<li><code>-n</code>：指定并发的线程数，需要安装<code>pytest-xdist</code>插件</li>
+<li><code>--reruns</code>：指定失败重跑次数，需要安装<code>pytest-rerunfailures</code>插件</li>
+</ul>
+</li>
+</ul>
+<h4 id="命令行运行方式"><a href="#命令行运行方式" class="headerlink" title="命令行运行方式"></a>命令行运行方式</h4><ul>
+<li>直接在命令行中使用<code>pytest</code>命令运行测试用例：<code>pytest -vs ./test_cases/ --reruns 2</code></li>
+</ul>
+<h4 id="使用pytest-ini配置文件运行"><a href="#使用pytest-ini配置文件运行" class="headerlink" title="使用pytest.ini配置文件运行"></a>使用<code>pytest.ini</code>配置文件运行</h4><ul>
+<li>在项目根目录下创建<code>pytest.ini</code>配置文件，定义测试运行的配置</li>
+</ul>
+<div class="code-container" data-rel="Ini"><figure class="iseeu highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[pytest]</span></span><br><span class="line"><span class="attr">testpaths</span> = ./test_cases</span><br><span class="line"><span class="attr">python_files</span> = test_*.py</span><br><span class="line"><span class="attr">python_classes</span> = Test*</span><br><span class="line"><span class="attr">python_functions</span> = test_*</span><br><span class="line"><span class="attr">addopts</span> = -vs --reruns <span class="number">2</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>注意：<ul>
+<li>文件名必须为<code>pytest.ini</code></li>
+<li>文件编码格式为<code>UTF-8</code>，避免使用中文字符导致报错</li>
+</ul>
+</li>
+</ul>
+<p>指定测试用例的运行</p>
+<ul>
+<li>可以通过命令行参数指定运行的测试模块或目录</li>
+<li>指定模块运行</li>
+</ul>
+<div class="code-container" data-rel="Cmd"><figure class="iseeu highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pytest ./test/cases/test_login.py</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>指定目录运行</li>
+</ul>
+<div class="code-container" data-rel="Cmd"><figure class="iseeu highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pytest ./test/cases/</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="测试用例的分布式执行"><a href="#测试用例的分布式执行" class="headerlink" title="测试用例的分布式执行"></a>测试用例的分布式执行</h3><ul>
+<li><p>安装<code>pytest-xdist</code>插件，实现测试用例的多进程并发执行</p>
+</li>
+<li><p>使用方法</p>
+<ul>
+<li><p>命令行：<code>python -vs ./test_cases/ -n 3</code></p>
+</li>
+<li><p>代码中：</p>
+</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pytest.main([<span class="string">"-vs"</span>, <span class="string">"./test_cases/"</span>, <span class="string">"-n"</span>, <span class="string">"3"</span>])</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h3 id="改变测试用例的执行顺序"><a href="#改变测试用例的执行顺序" class="headerlink" title="改变测试用例的执行顺序"></a>改变测试用例的执行顺序</h3><ul>
+<li>安装<code>pytest-ordering</code>插件，使用装饰器控制执行顺序</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.run(<span class="params">order=<span class="number">1</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_case1</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.run(<span class="params">order=<span class="number">2</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_case2</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.run(<span class="params">order=<span class="number">3</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_case3</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="测试用例失败重跑"><a href="#测试用例失败重跑" class="headerlink" title="测试用例失败重跑"></a>测试用例失败重跑</h3><ul>
+<li><p>安装<code>pytest-rerunfailures</code>插件，实现失败后自动重跑</p>
+</li>
+<li><p>使用方法：</p>
+<ul>
+<li>命令行：<code>pytest -vs ./test/cases/ --reruns 2</code></li>
+<li>代码中：</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pytest.main([<span class="string">"-vs"</span>, <span class="string">"./test/cases/"</span>, <span class="string">"--reruns"</span>, <span class="string">"2"</span>])</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h3 id="生成测试报告"><a href="#生成测试报告" class="headerlink" title="生成测试报告"></a>生成测试报告</h3><ul>
+<li>安装<code>allure-pytest</code>插件，与 Allure 结合生成测试报告</li>
+<li>使用方法：<code>pytest -vs ./test/cases/ --alluredir ./report</code></li>
+<li>生成并查看报告：<code>allure serve ./report</code></li>
+</ul>
+<h2 id="Pytest测试用例分组与跳过"><a href="#Pytest测试用例分组与跳过" class="headerlink" title="Pytest测试用例分组与跳过"></a>Pytest测试用例分组与跳过</h2><ul>
+<li>在实际测试中，可能需要对测试用例进行分组、跳过某些测试或有选择地执行特定的测试用例。</li>
+</ul>
+<h3 id="分组测试用例"><a href="#分组测试用例" class="headerlink" title="分组测试用例"></a>分组测试用例</h3><ul>
+<li>为什么要分组和分模块执行测试用例？<ul>
+<li>在大型项目中，测试用例数量众多，分组可以方便地管理和执行特定的测试用例，如冒烟测试、功能模块测试等。通过分组，可以提高测试效率，节省时间。</li>
+</ul>
+</li>
+<li>具体流程：使用Pytest的标记功能进行分组 → 在配置文件中注册标记 → 执行特定标记的用例</li>
+</ul>
+<h4 id="使用Pytest的标记功能进行分组"><a href="#使用Pytest的标记功能进行分组" class="headerlink" title="使用Pytest的标记功能进行分组"></a>使用Pytest的标记功能进行分组</h4><ul>
+<li><p>为测试用例添加标记</p>
+<ul>
+<li>使用<code>@pytest.mark.&lt;marker_name&gt;</code>装饰器为测试用例添加自定义标记</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.smoke</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_login_success</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.user_management</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add_user</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.user_management</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_delete_user</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="在配置文件中注册标记"><a href="#在配置文件中注册标记" class="headerlink" title="在配置文件中注册标记"></a>在配置文件中注册标记</h4><ul>
+<li>为避免警告，需要在<code>pytest.ini</code>中注册自定义标记</li>
+</ul>
+<div class="code-container" data-rel="Ini"><figure class="iseeu highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[pytest]</span></span><br><span class="line"><span class="attr">markers</span> = </span><br><span class="line">	smoke: 冒烟测试用例</span><br><span class="line">	user_management: 用户管理模块测试用例</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="执行特定标记的用例"><a href="#执行特定标记的用例" class="headerlink" title="执行特定标记的用例"></a>执行特定标记的用例</h4><ul>
+<li><p>使用<code>-m</code>参数指定运行特定标记的测试用例</p>
+</li>
+<li><p>执行所有冒烟测试用例：<code>pytest -m smoke</code></p>
+</li>
+<li><p>执行用户管理模块的测试用例：<code>pytest -m user_management</code></p>
+</li>
+<li><p>组合标记执行：</p>
+<ul>
+<li>同时执行冒烟测试和用户管理模块的测试用例：<code>pytest -m "smoke or user_management"</code></li>
+<li>仅执行同时属于冒烟测试和用户管理模块的测试用例：<code>pytest -m "smoke and user_management"</code></li>
+</ul>
+</li>
+<li><p>注意事项</p>
+<ul>
+<li>标记名称需保持一致：标记名称需要在装饰器、配置文件和命令行中保持一致。</li>
+<li>导入 Pytest 模块：在使用<code>@pytest.mark</code>时，需要先<code>import pytest</code>。</li>
+<li>逻辑运算符：在命令行中使用逻辑运算符（and、or、not）组合标记时，需要用引号括起来。</li>
+</ul>
+</li>
+</ul>
+<h3 id="跳过测试用例"><a href="#跳过测试用例" class="headerlink" title="跳过测试用例"></a>跳过测试用例</h3><h4 id="无条件跳过测试"><a href="#无条件跳过测试" class="headerlink" title="无条件跳过测试"></a>无条件跳过测试</h4><ul>
+<li>使用<code>@pytest.mark.skip</code>无条件跳过测试</li>
+<li>当某个测试用例暂时不需要执行时，可以使用<code>@pytest.mark.skip</code>装饰器，其中reason参数用于说明跳过的原因</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.skip(<span class="params">reason=<span class="string">"功能未实现"</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_feature_x</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="有条件跳过测试"><a href="#有条件跳过测试" class="headerlink" title="有条件跳过测试"></a>有条件跳过测试</h4><ul>
+<li>根据条件决定是否跳过测试，用<code>pytest.mark.skipif</code>装饰器</li>
+<li>当条件为True时，会跳过该测试</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.skipif(<span class="params">sys.platform == <span class="string">"win32"</span>, reason=<span class="string">"不支持 Windows 平台"</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_unix_only_feature</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="动态跳过测试"><a href="#动态跳过测试" class="headerlink" title="动态跳过测试"></a>动态跳过测试</h4><ul>
+<li>在测试函数内部，根据运行时条件跳过测试</li>
+<li>当跳过决策依赖于运行时信息时，这种方式非常有用</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_dynamic_skip</span>():</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> is_feature_available():</span><br><span class="line">        pytest.skip(<span class="string">"该功能不可用"</span>)</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="有效使用跳过和标记的技巧"><a href="#有效使用跳过和标记的技巧" class="headerlink" title="有效使用跳过和标记的技巧"></a>有效使用跳过和标记的技巧</h3><ul>
+<li>一致的标记命名：使用清晰、统一的标记名称，使测试选择更直观。</li>
+<li>标记文档化：在<code>pytest.ini</code>中注册标记，避免警告并便于维护。</li>
+<li>合理使用条件：在使用<code>skipif</code>时，条件应准确反映跳过的场景。</li>
+<li>组合标记：利用标记组合，实现灵活的测试执行，适应不同的测试需求。</li>
+<li>定期检查跳过的测试：避免长期跳过测试掩盖潜在问题，定期检查并更新。</li>
+</ul>
+<h1 id="Pytest中的case前后置处理与数据驱动"><a href="#Pytest中的case前后置处理与数据驱动" class="headerlink" title="Pytest中的case前后置处理与数据驱动"></a>Pytest中的case前后置处理与数据驱动</h1><ul>
+<li>在自动化测试中，前后置处理（setup 和 teardown）是非常重要的部分，它帮助我们在测试执行前准备环境，并在测试完成后进行清理。</li>
+</ul>
+<h2 id="UnitTest中的前后置处理"><a href="#UnitTest中的前后置处理" class="headerlink" title="UnitTest中的前后置处理"></a>UnitTest中的前后置处理</h2><ul>
+<li>在经典的 UnitTest 框架中，前后置处理通过 setup 和 teardown 实现。通过定义 setup_class 或 teardown_class，可以确保某些操作在所有测试用例执行前后只执行一次。</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">setup_method</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"前置处理，每个测试方法执行前都会运行"</span>)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">teardown_method</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"后置处理，每个测试方法执行后都会执行"</span>)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="Pytest的前后置处理"><a href="#Pytest的前后置处理" class="headerlink" title="Pytest的前后置处理"></a>Pytest的前后置处理</h2><ul>
+<li>Pytest 提供了一种更灵活的方式来实现前后置处理，即通过 <code>pytest.fixture</code> 装饰器来实现。</li>
+<li>yield 关键字在 Pytest 中作为前后置处理的分隔点，yield 之前的代码在测试前执行，yield 之后的代码在测试后执行。</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.fixture</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">setup_teardown</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"前置处理"</span>)</span><br><span class="line">    <span class="keyword">yield</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"后置处理"</span>)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>在每个测试用例执行时，setup_teardown 中的前置处理会自动运行，在测试完成后，后置处理自动触发。</p>
+</li>
+<li><p>详细版：在每个测试用例执行前，Pytest 会自动执行 setup_teardown 中的前置处理部分；在测试用例执行后，后置处理会自动触发。</p>
+</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.fixture</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">setup_teardown</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"执行前"</span>)</span><br><span class="line">    <span class="keyword">yield</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"执行后"</span>)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_case_1</span>(<span class="params">setup_teardown</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"测试用例 1 执行"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_case_2</span>(<span class="params">setup_teardown</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"测试用例 2 执行"</span>)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="conftest-py-文件中的前后置处理"><a href="#conftest-py-文件中的前后置处理" class="headerlink" title="conftest.py 文件中的前后置处理"></a>conftest.py 文件中的前后置处理</h2><ul>
+<li>Pytest 提供了第三种前后置处理方式：在 <code>conftest.py</code>文件中定义全局的前后置处理逻辑。<code>conftest.py</code> 是一个特殊文件，可以被所有测试用例共享，适合用于初始化全局状态。</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># conftest.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.fixture(<span class="params">scope=<span class="string">"session"</span>, autouse=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">global_setup</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"全局前置处理"</span>)</span><br><span class="line">    <span class="keyword">yield</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"全局后置处理"</span>)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>scope 参数可以定义前后置操作的作用范围：function（方法）、class（类）、module（测试模块，即py文件）、package（包/目录）、session（整个测试会话，即所有测试文件）。</li>
+<li><code>autouse = True</code> 表示该fixture会自动应用于所有测试用例。</li>
+</ul>
+<h2 id="Pytest作用域管理"><a href="#Pytest作用域管理" class="headerlink" title="Pytest作用域管理"></a>Pytest作用域管理</h2><ul>
+<li>在 <code>pytest.fixture</code>中，通过scope参数可以灵活管理前后置处理的执行频率<ul>
+<li>function：每个测试函数执行前后运行一次</li>
+<li>class：在测试类的作用域内，前后置处理仅执行一次</li>
+<li>module：跨文件的情况下，每个模块只执行一次前后置处理</li>
+<li>session：测试会话期间，全局的前后置处理仅执行一次</li>
+</ul>
+</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.fixture(<span class="params">scope=<span class="string">"class"</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">setup_class</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"类的前置处理"</span>)</span><br><span class="line">    <span class="keyword">yield</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"类的后置处理"</span>)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>这种灵活性让我们可以根据具体需求，控制前后置处理的作用范围，从而提高测试的效率与可维护性。</li>
+</ul>
+<h2 id="参数化处理"><a href="#参数化处理" class="headerlink" title="参数化处理"></a>参数化处理</h2><ul>
+<li>Pytest支持通过<code>pytest.mark.parametrize</code>进行参数化测试，可以一次性测试多个输入组合，减少重复编写代码的情况。</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">"input, expected"</span>,[</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="number">1</span>, <span class="number">2</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="number">2</span>, <span class="number">4</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="number">3</span>, <span class="number">6</span></span>)</span></span></span><br><span class="line"><span class="params"><span class="meta">]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_multiply</span>(<span class="params"><span class="built_in">input</span>, expected</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">input</span> * <span class="number">2</span> == expected</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>parametrize 提供了一种简洁的方式定义测试输入和期望输出，通过一次性传递多个值，减少冗余代码。</li>
+</ul>
+<h2 id="结合conftest-py的多文件支持"><a href="#结合conftest-py的多文件支持" class="headerlink" title="结合conftest.py的多文件支持"></a>结合conftest.py的多文件支持</h2><ul>
+<li><code>conftest.py</code>文件可以根据项目结构放置在<strong>不同层级的目录</strong>中，从而控制前后置处理的作用范围。<ul>
+<li>在根目录下，可用于全局的前后置处理</li>
+<li>在子模块下，可针对该模块内的测试用例进行特定处理</li>
+</ul>
+</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 项目根目录 conftest.py</span></span><br><span class="line"><span class="meta">@pytest.fixture(<span class="params">scope=<span class="string">"session"</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">global_setup</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"全局前置处理"</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 子模块 test_case 目录下的 conftest.py</span></span><br><span class="line"><span class="meta">@pytest.fixture(<span class="params">scope=<span class="string">"module"</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">module_setup</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"模块前置处理"</span>)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="Pytest与YAML文件结合实现数据驱动"><a href="#Pytest与YAML文件结合实现数据驱动" class="headerlink" title="Pytest与YAML文件结合实现数据驱动"></a>Pytest与YAML文件结合实现数据驱动</h2><ul>
+<li>在接口自动化测试中，将测试数据与测试逻辑分离是一种良好的实践。Pytest 结合 YAML 文件可以很好地实现这一点，使得我们的测试更加灵活和易于维护。</li>
+</ul>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ul>
+<li>安装必要的库：<code>pip install pytest pyyaml</code></li>
+<li>创建一个用于读取YAML文件的工具类</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># utils/YamlUtil.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">YamlReader</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, yaml_file</span>):</span><br><span class="line">        <span class="variable language_">self</span>.yaml_file= yaml_file</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">data</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(<span class="variable language_">self</span>.yaml_file, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            <span class="keyword">return</span> yaml.safe_load(f)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="编写测试用例-1"><a href="#编写测试用例-1" class="headerlink" title="编写测试用例"></a>编写测试用例</h3><ul>
+<li>假设有一个登录接口需要测试，则编写测试用例如下</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#test_login.py</span></span><br><span class="line"><span class="keyword">from</span> utils.YamlUtil <span class="keyword">import</span> YamlReader</span><br><span class="line"><span class="keyword">from</span> utils.RequestsUtil <span class="keyword">import</span> RequestsUtil</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_login</span>():</span><br><span class="line">    <span class="comment"># 读取YAML文件</span></span><br><span class="line">    case_info = YamlReader(<span class="string">"../testcase/login/login.yaml"</span>).data()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 提取接口信息</span></span><br><span class="line">    url = <span class="built_in">str</span>(case_info[<span class="number">0</span>][<span class="string">'request'</span>][<span class="string">'url'</span>])</span><br><span class="line">    method = <span class="built_in">str</span>(case_info[<span class="number">0</span>][<span class="string">'request'</span>][<span class="string">'method'</span>])</span><br><span class="line">    headers = <span class="built_in">str</span>(case_info[<span class="number">0</span>][<span class="string">'request'</span>][<span class="string">'headers'</span>])</span><br><span class="line">    data = <span class="built_in">str</span>(case_info[<span class="number">0</span>][<span class="string">'request'</span>][<span class="string">'data'</span>])</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 发送请求</span></span><br><span class="line">    req = RequestsUtil()</span><br><span class="line">    res = req.send_request(url=url, data=data, headers=headers, method=method)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 断言</span></span><br><span class="line">    <span class="keyword">assert</span> res.json[<span class="string">"message"</span>] == <span class="string">"登录成功"</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="YAML的文件结构"><a href="#YAML的文件结构" class="headerlink" title="YAML的文件结构"></a>YAML的文件结构</h3><div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span></span><br><span class="line">	<span class="attr">name:</span> <span class="string">登录测试</span></span><br><span class="line">	<span class="attr">request:</span></span><br><span class="line">		<span class="attr">url:</span> <span class="string">/api/login</span></span><br><span class="line">		<span class="attr">method:</span> <span class="string">POST</span></span><br><span class="line">		<span class="attr">headers:</span></span><br><span class="line">			<span class="attr">Content-Type:</span> <span class="string">application/json</span></span><br><span class="line">		<span class="attr">data:</span></span><br><span class="line">			<span class="attr">username:</span> <span class="string">testuser</span></span><br><span class="line">			<span class="attr">password:</span> <span class="string">password123</span></span><br><span class="line">	<span class="attr">validate:</span></span><br><span class="line">		<span class="bullet">-</span> <span class="attr">eq:</span> [<span class="string">status_code</span>, <span class="number">200</span>] </span><br><span class="line">		<span class="bullet">-</span> <span class="attr">eq:</span> [<span class="string">$.message</span>, <span class="string">"登录成功"</span>]</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="优化测试框架"><a href="#优化测试框架" class="headerlink" title="优化测试框架"></a>优化测试框架</h3><ul>
+<li>为了进一步简化测试用例的编写，可以在<code>APIUtil.py</code>中定义一个通用的方法</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># utils/APIUtil.py</span></span><br><span class="line"><span class="keyword">from</span> utils.YamlUtil <span class="keyword">import</span> YamlReader</span><br><span class="line"><span class="keyword">from</span> utils.RequestsUtil <span class="keyword">import</span> RequestsUtil</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">APIUtil</span>:</span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_case_info</span>(<span class="params">yaml_file</span>):</span><br><span class="line">        case_info = YamlReader(yaml_file).data() </span><br><span class="line">        url = <span class="built_in">str</span>(case_info[<span class="number">0</span>][<span class="string">'request'</span>][<span class="string">'url'</span>])</span><br><span class="line">    	method = <span class="built_in">str</span>(case_info[<span class="number">0</span>][<span class="string">'request'</span>][<span class="string">'method'</span>])</span><br><span class="line">        headers = <span class="built_in">str</span>(case_info[<span class="number">0</span>][<span class="string">'request'</span>][<span class="string">'headers'</span>])</span><br><span class="line">        data = <span class="built_in">str</span>(case_info[<span class="number">0</span>][<span class="string">'request'</span>][<span class="string">'data'</span>])</span><br><span class="line">        <span class="keyword">return</span> url, method, headers, data</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">send_request</span>(<span class="params">yaml_file</span>):</span><br><span class="line">        url, method, headers, data = APIUtil.get_case_info(yaml_file)</span><br><span class="line">        req = RequestsUtil()</span><br><span class="line">        <span class="keyword">return</span> req.send_request(url=url, method=method, headers=headers, data=data)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>这样测试用例可以简化如下：</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># test_login.py</span></span><br><span class="line"><span class="keyword">from</span> utils/APIUtil <span class="keyword">import</span> APIUtil</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_login</span>():</span><br><span class="line">    res = APIUtil.send_request(<span class="string">"../testcase/login/login.yaml"</span>)</span><br><span class="line">    <span class="keyword">assert</span> res.json()[<span class="string">'message'</span>] == <span class="string">'登录成功'</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="数据驱动测试"><a href="#数据驱动测试" class="headerlink" title="数据驱动测试"></a>数据驱动测试</h3><ul>
+<li>利用Pytest的参数化功能，可以轻松实现数据驱动测试</li>
+</ul>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"><span class="keyword">from</span> utils.APIUtil <span class="keyword">import</span> APIUtil</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">"yaml_file"</span>,[</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">'../testcase/login/login_success.yaml'</span>,</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">'../testcase/login/login_fail_wrong_password.yaml'</span>,</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">'../testcase/login/login_fail_invalid_user.yaml'</span></span></span></span><br><span class="line"><span class="params"><span class="meta">]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_login</span>(<span class="params">yaml_file</span>):</span><br><span class="line">    res = APIUtil.send_request(yaml_file)</span><br><span class="line">    <span class="keyword">assert</span> res.status_code == <span class="number">200</span></span><br></pre></td></tr></table></figure></div>
+
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>标题:</strong> Pytest项目</li>
+        <li><strong>作者:</strong> Bubb1e</li>
+        <li><strong>创建于
+                :</strong> 2025-05-10 19:05:23</li>
+        
+            <li>
+                <strong>更新于
+                    :</strong> 2025-05-10 22:32:13
+            </li>
+        
+        <li>
+            <strong>链接:</strong> https://github.com/Bu6ble/Bu6ble.github.io.git/软件测试/测试开发工具/Pytest源码剖析/
+        </li>
+        <li>
+            <strong>
+                版权声明:
+            </strong>
+            
+
+            
+                本文章采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a> 进行许可。
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/">#软件测试</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA%E7%9F%A5%E8%AF%86/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">软件测试基础理论知识</span>
+						<span class="post-nav-item">下一篇</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">目录</div>
+		<div class="page-title">Pytest项目</div>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%90%86%E8%AE%BA%E5%BC%80%E7%AF%87"><span class="nav-number">1.</span> <span class="nav-text">理论开篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EPython%E7%9A%84Request%E6%A8%A1%E5%9D%97"><span class="nav-number">2.</span> <span class="nav-text">关于Python的Request模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">基础使用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E6%96%B9%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">数据传输方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86%E4%B8%8E%E6%8C%81%E4%B9%85%E6%80%A7%E8%BF%9E%E6%8E%A5"><span class="nav-number">2.3.</span> <span class="nav-text">会话管理与持久性连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E5%93%8D%E5%BA%94%E7%BB%93%E6%9E%9C"><span class="nav-number">2.4.</span> <span class="nav-text">处理响应结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E5%AF%B9HTTPS%E8%AF%81%E4%B9%A6%E9%AA%8C%E8%AF%81"><span class="nav-number">2.5.</span> <span class="nav-text">应对HTTPS证书验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E4%B8%8E%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7"><span class="nav-number">2.6.</span> <span class="nav-text">错误处理与异常捕获</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#API%E6%B5%8B%E8%AF%95%E4%B8%AD%E4%BD%BF%E7%94%A8YAML%E7%AE%A1%E7%90%86%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">API测试中使用YAML管理测试用例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%BD%E7%95%A5HTTPS%E8%AF%81%E4%B9%A6%E9%AA%8C%E8%AF%81"><span class="nav-number">3.1.</span> <span class="nav-text">忽略HTTPS证书验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3YAML%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">了解YAML文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFYAML"><span class="nav-number">3.2.1.</span> <span class="nav-text">什么是YAML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YAML%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-number">3.2.2.</span> <span class="nav-text">YAML的基本语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="nav-number">3.2.3.</span> <span class="nav-text">基本结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E7%9A%84YAML%E6%96%87%E4%BB%B6"><span class="nav-number">3.3.</span> <span class="nav-text">编写接口测试用例的YAML文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="nav-number">3.3.1.</span> <span class="nav-text">定义基本结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">3.3.2.</span> <span class="nav-text">编写测试用例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8Python%E4%B8%AD%E8%AF%BB%E5%8F%96YAML%E6%96%87%E4%BB%B6"><span class="nav-number">3.4.</span> <span class="nav-text">在Python中读取YAML文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E5%87%BD%E6%95%B0"><span class="nav-number">3.4.1.</span> <span class="nav-text">读取函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%AF%BB%E5%8F%96%E7%9A%84%E6%95%B0%E6%8D%AE%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82"><span class="nav-number">3.4.2.</span> <span class="nav-text">使用读取的数据发送请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98"><span class="nav-number">3.4.3.</span> <span class="nav-text">处理编码问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8Python%E4%B8%AD%E5%B0%86%E6%8E%A5%E5%8F%A3%E8%BF%94%E5%9B%9E%E5%80%BC%E5%86%99%E5%85%A5%E6%8C%87%E5%AE%9A%E7%9A%84YAML%E6%96%87%E4%BB%B6"><span class="nav-number">3.5.</span> <span class="nav-text">在Python中将接口返回值写入指定的YAML文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E8%AF%BB%E5%8F%96%E5%92%8C%E5%86%99%E5%85%A5YAML%E6%95%B0%E6%8D%AE%E7%9A%84%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="nav-number">3.5.1.</span> <span class="nav-text">定义读取和写入YAML数据的工具类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E5%B0%86%E6%8E%A5%E5%8F%A3%E8%BF%94%E5%9B%9E%E7%9A%84Token%E5%86%99%E5%85%A5%E5%88%B0YAML%E6%96%87%E4%BB%B6"><span class="nav-number">3.5.2.</span> <span class="nav-text">示例：将接口返回的Token写入到YAML文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%EF%BC%9AJSON%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">3.6.</span> <span class="nav-text">扩展：JSON的序列化和反序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8YAML%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E4%B8%AD%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E7%9A%84%E5%8A%A8%E6%80%81%E6%9B%BF%E6%8D%A2"><span class="nav-number">3.7.</span> <span class="nav-text">在YAML测试用例中实现参数的动态替换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E7%BC%96%E7%A0%81%E5%8F%82%E6%95%B0%E9%97%AE%E9%A2%98"><span class="nav-number">3.7.1.</span> <span class="nav-text">硬编码参数问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5debugtalk%E6%A8%A1%E5%9D%97"><span class="nav-number">3.7.2.</span> <span class="nav-text">引入debugtalk模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%9E%90%E5%B9%B6%E6%9B%BF%E6%8D%A2YAML%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E5%8D%A0%E4%BD%8D%E7%AC%A6"><span class="nav-number">3.7.3.</span> <span class="nav-text">解析并替换YAML文件中的占位符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%8D%E5%B0%84%E5%8A%A8%E6%80%81%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">3.7.4.</span> <span class="nav-text">使用反射动态调用函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E4%B8%8D%E5%90%8C%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%9C%BA%E6%99%AF"><span class="nav-number">3.7.5.</span> <span class="nav-text">处理不同的数据类型和场景</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pytest%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7"><span class="nav-number">4.</span> <span class="nav-text">Pytest使用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pytest%E7%AE%80%E4%BB%8B"><span class="nav-number">4.1.</span> <span class="nav-text">Pytest简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pytest%E7%89%B9%E6%80%A7"><span class="nav-number">4.2.</span> <span class="nav-text">Pytest特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%8F%92%E4%BB%B6"><span class="nav-number">4.2.1.</span> <span class="nav-text">常用插件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pytest%E6%A1%86%E6%9E%B6%E8%A7%84%E5%88%99%E5%8F%8A%E8%BF%90%E8%A1%8C%E6%96%B9%E6%B3%95"><span class="nav-number">4.3.</span> <span class="nav-text">Pytest框架规则及运行方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E7%9A%84%E7%BC%96%E5%86%99%E8%A7%84%E5%88%99"><span class="nav-number">4.3.1.</span> <span class="nav-text">测试用例的编写规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E7%9A%84%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="nav-number">4.3.2.</span> <span class="nav-text">测试用例的运行方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E6%89%A7%E8%A1%8C"><span class="nav-number">4.3.3.</span> <span class="nav-text">测试用例的分布式执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%8F%98%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">4.3.4.</span> <span class="nav-text">改变测试用例的执行顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%A4%B1%E8%B4%A5%E9%87%8D%E8%B7%91"><span class="nav-number">4.3.5.</span> <span class="nav-text">测试用例失败重跑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A"><span class="nav-number">4.3.6.</span> <span class="nav-text">生成测试报告</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pytest%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%88%86%E7%BB%84%E4%B8%8E%E8%B7%B3%E8%BF%87"><span class="nav-number">4.4.</span> <span class="nav-text">Pytest测试用例分组与跳过</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">4.4.1.</span> <span class="nav-text">分组测试用例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%BF%87%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">4.4.2.</span> <span class="nav-text">跳过测试用例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E6%95%88%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%BF%87%E5%92%8C%E6%A0%87%E8%AE%B0%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">4.4.3.</span> <span class="nav-text">有效使用跳过和标记的技巧</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pytest%E4%B8%AD%E7%9A%84case%E5%89%8D%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E4%B8%8E%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8"><span class="nav-number">5.</span> <span class="nav-text">Pytest中的case前后置处理与数据驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#UnitTest%E4%B8%AD%E7%9A%84%E5%89%8D%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86"><span class="nav-number">5.1.</span> <span class="nav-text">UnitTest中的前后置处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pytest%E7%9A%84%E5%89%8D%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86"><span class="nav-number">5.2.</span> <span class="nav-text">Pytest的前后置处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conftest-py-%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E5%89%8D%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86"><span class="nav-number">5.3.</span> <span class="nav-text">conftest.py 文件中的前后置处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pytest%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%AE%A1%E7%90%86"><span class="nav-number">5.4.</span> <span class="nav-text">Pytest作用域管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E5%8C%96%E5%A4%84%E7%90%86"><span class="nav-number">5.5.</span> <span class="nav-text">参数化处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E5%90%88conftest-py%E7%9A%84%E5%A4%9A%E6%96%87%E4%BB%B6%E6%94%AF%E6%8C%81"><span class="nav-number">5.6.</span> <span class="nav-text">结合conftest.py的多文件支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pytest%E4%B8%8EYAML%E6%96%87%E4%BB%B6%E7%BB%93%E5%90%88%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8"><span class="nav-number">5.7.</span> <span class="nav-text">Pytest与YAML文件结合实现数据驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">5.7.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B-1"><span class="nav-number">5.7.2.</span> <span class="nav-text">编写测试用例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YAML%E7%9A%84%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-number">5.7.3.</span> <span class="nav-text">YAML的文件结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6"><span class="nav-number">5.7.4.</span> <span class="nav-text">优化测试框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8%E6%B5%8B%E8%AF%95"><span class="nav-number">5.7.5.</span> <span class="nav-text">数据驱动测试</span></a></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2024</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Bubb1e</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        共撰写了 20 篇文章
+                    </span>
+                    
+                        <span>
+                            共 45.5k 字
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+        </div>
+        
+        
+            <div>
+                博客已运行 <span class="odometer" id="runtime_days" ></span> 天 <span class="odometer" id="runtime_hours"></span> 小时 <span class="odometer" id="runtime_minutes"></span> 分钟 <span class="odometer" id="runtime_seconds"></span> 秒
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="站内搜索您需要的内容..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>
